@@ -35,32 +35,33 @@ export function Login() {
   const isNewLoginMode = loginMode === "new";
   return (
     <>
-      <Button
-        color="success"
-        size="lg"
-        variant="light"
-        onClick={() => {
-          setLoginMode("new");
-          setSk(getRandomString(28));
-          onOpen();
-        }}
-        className="w-full"
-      >
-        创建帐号
-      </Button>
-      <Button
-        color="warning"
-        size="lg"
-        variant="light"
-        onClick={() => {
-          setLoginMode("recover");
-          setSk("");
-          onOpen();
-        }}
-        className="w-full"
-      >
-        找回帐号
-      </Button>
+      <div className="flex justify-center gap-10">
+        <Button
+          color="success"
+          size="lg"
+          variant="ghost"
+          onClick={() => {
+            setLoginMode("new");
+            setSk(getRandomString(28));
+            onOpen();
+          }}
+        >
+          创建帐号
+        </Button>
+        <Button
+          color="warning"
+          size="lg"
+          variant="ghost"
+          onClick={() => {
+            setLoginMode("recover");
+            setSk("");
+            onOpen();
+          }}
+        >
+          找回帐号
+        </Button>
+      </div>
+
       <Modal
         size="xs"
         placement="center"
@@ -78,7 +79,7 @@ export function Login() {
                 <p>请保存好你的密钥到本地，以便下次再次登录</p>
               </ModalBody>
               <ModalFooter>
-                <Button color="primary" onPress={onClose}>
+                <Button color="success" onPress={onClose}>
                   好的
                 </Button>
               </ModalFooter>
@@ -105,7 +106,7 @@ export function Login() {
                     size="lg"
                     type="text"
                     placeholder="Mortal"
-                    defaultValue={username}
+                    value={username}
                     onValueChange={setUsername}
                     isRequired
                     endContent={
@@ -113,7 +114,7 @@ export function Login() {
                         variant="light"
                         color="default"
                         onClick={() => {
-                          setUsername(getRandomString());
+                          setUsername("Mortal_" + getRandomString());
                         }}
                       >
                         随机生成
@@ -149,7 +150,7 @@ export function Login() {
                   关闭
                 </Button>
                 <Button
-                  color="primary"
+                  color="success"
                   onPress={async () => {
                     const res = await fetch(
                       isNewLoginMode ? "/api/add-user" : "/api/recover-user",
