@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Providers } from "./providers";
+import { ClientOnly } from "./ClientOnly";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,7 +15,9 @@ export default function RootLayout({
   return (
     <html className="dark">
       <body className="p-4">
-        <Providers>{children}</Providers>
+        <Providers>
+          <ClientOnly>{children}</ClientOnly>
+        </Providers>
       </body>
     </html>
   );
