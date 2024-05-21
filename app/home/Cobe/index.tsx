@@ -66,11 +66,9 @@ export function Cobe() {
   return (
     <div
       style={{
-        width: "100%",
         aspectRatio: 1,
-        margin: "auto",
-        position: "relative",
       }}
+      className="relative max-w-[640px] m-auto"
     >
       <canvas
         ref={canvasRef}
