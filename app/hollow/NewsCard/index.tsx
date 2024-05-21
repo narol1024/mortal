@@ -13,7 +13,6 @@ import avatar from "@/assets/logo.png";
 import { NewsData } from "../types";
 
 export function NewsCard(props: NewsData) {
-  console.log(props);
   return (
     <RawCard shadow="none">
       <CardHeader className="flex gap-3">

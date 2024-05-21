@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from "react";
 import {
   Modal,
@@ -21,7 +19,7 @@ export function Login() {
   const [username, setUsername] = useState<string>(_defaultUsername);
   const [loginMode, setLoginMode] = useState<"new" | "recover">("new");
   const [sk, setSk] = useState<string>("");
-  const [copied, copyToClipboard] = useCopyToClipboard();
+  const [_, copyToClipboard] = useCopyToClipboard();
   const [_2, saveUserData] = useLocalStorage<Omit<UserData, "id"> | null>(
     "user",
     null

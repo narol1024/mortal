@@ -1,5 +1,3 @@
-"use client";
-
 import createGlobe from "cobe";
 import { useEffect, useRef } from "react";
 import { useSpring } from "react-spring";
