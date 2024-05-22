@@ -1,23 +1,67 @@
 "use client";
 
 import React from "react";
-import { Image, Link } from "@nextui-org/react";
-import { useLocalStorage } from "@uidotdev/usehooks";
+import { Button, Image, Link } from "@nextui-org/react";
 import { Cobe } from "./Cobe";
 import { News } from "./News";
 import { Publish } from "./Publish";
+import { Register } from "./Register";
 import { Login } from "./Login";
-import { UserData } from "./types";
 import avatar from "@/assets/logo.png";
+import { useStores } from "@/hooks/userStores";
+import { observer } from "mobx-react-lite";
 
-export default function App() {
-  const [userData] = useLocalStorage<UserData | null>("user", null);
+const HomePage = observer(() => {
+  const { user, news } = useStores();
+  const userInfo = user.userInfo;
+  const isLogined = !!userInfo.id;
   return (
     <div className="relative w-full">
       <Cobe />
+      <Register />
+      <Login />
+      <Publish />
       <News />
-      {!userData && <Login />}
-      {userData && <Publish />}
+      {!isLogined && (
+        <div className="flex justify-center gap-10">
+          <Button
+            color="success"
+            size="lg"
+            variant="ghost"
+            onClick={() => {
+              user.showRegister();
+            }}
+          >
+            创建帐号
+          </Button>
+          <Button
+            color="warning"
+            size="lg"
+            variant="ghost"
+            onClick={() => {
+              user.showLogin();
+            }}
+          >
+            登录
+          </Button>
+        </div>
+      )}
+      {isLogined && (
+        <div className="flex justify-center flex-col gap-4">
+          <p className="w-full text-center">{userInfo.username}，你好</p>
+          <div className="flex justify-center">
+            <Button
+              size="lg"
+              variant="ghost"
+              onClick={() => {
+                news.showPublish();
+              }}
+            >
+              去分享
+            </Button>
+          </div>
+        </div>
+      )}
       <div className="flex justify-center items-center mt-10 gap-2">
         <Image height={48} src={avatar.src} width={48} />
         <Link
@@ -31,4 +75,6 @@ export default function App() {
       </div>
     </div>
   );
-}
+});
+
+export default HomePage;

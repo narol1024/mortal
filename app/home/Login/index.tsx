@@ -8,176 +8,82 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  Input,
-  useDisclosure,
+  Textarea,
 } from "@nextui-org/react";
-import { useLocalStorage, useCopyToClipboard } from "@uidotdev/usehooks";
-import { getRandomString } from "../util";
-import { UserData } from "../types";
 
-const _defaultUsername = "Mortal_" + getRandomString();
+import { useStores } from "@/hooks/userStores";
+import { observer } from "mobx-react-lite";
+import { useModal } from "@ebay/nice-modal-react";
+import Message from "../Message";
 
-export function Login() {
-  const [username, setUsername] = useState<string>(_defaultUsername);
-  const [loginMode, setLoginMode] = useState<"new" | "recover">("new");
-  const [sk, setSk] = useState<string>("");
-  const [_, copyToClipboard] = useCopyToClipboard();
-  const [_2, saveUserData] = useLocalStorage<Omit<UserData, "id"> | null>(
-    "user",
-    null
-  );
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const {
-    isOpen: isCopiedOpen,
-    onOpen: onCopiedOpen,
-    onOpenChange: onCopiedOpenChange,
-  } = useDisclosure();
-  const isNewLoginMode = loginMode === "new";
+export const Login = observer(() => {
+  const messageModal = useModal(Message);
+  const [isLoginLoading, setIsLoginLoading] = useState(false);
+  const [secretKey, setSecretKey] = useState("");
+  const { user } = useStores();
   return (
-    <>
-      <div className="flex justify-center gap-10">
-        <Button
-          color="success"
-          size="lg"
-          variant="ghost"
-          onClick={() => {
-            setLoginMode("new");
-            setSk(getRandomString(28));
-            onOpen();
-          }}
-        >
-          创建帐号
-        </Button>
-        <Button
-          color="warning"
-          size="lg"
-          variant="ghost"
-          onClick={() => {
-            setLoginMode("recover");
-            setSk("");
-            onOpen();
-          }}
-        >
-          找回帐号
-        </Button>
-      </div>
-
-      <Modal
-        size="xs"
-        placement="center"
-        backdrop="blur"
-        isOpen={isCopiedOpen}
-        onOpenChange={onCopiedOpenChange}
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">
-                复制成功
-              </ModalHeader>
-              <ModalBody>
-                <p>请保存好你的密钥到本地，以便下次再次登录</p>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="success" onPress={onClose}>
-                  好的
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-      <Modal
-        isOpen={isOpen}
-        size="lg"
-        placement={"bottom"}
-        onOpenChange={onOpenChange}
-        isDismissable={false}
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">
-                {isNewLoginMode ? "你的Mortal帐号" : "找回帐号"}
-              </ModalHeader>
-              <ModalBody>
-                {isNewLoginMode && (
-                  <Input
-                    size="lg"
-                    type="text"
-                    placeholder="Mortal"
-                    value={username}
-                    onValueChange={setUsername}
-                    isRequired
-                    endContent={
-                      <Button
-                        variant="light"
-                        color="default"
-                        onClick={() => {
-                          setUsername("Mortal_" + getRandomString());
-                        }}
-                      >
-                        随机生成
-                      </Button>
-                    }
-                  />
-                )}
-                <Input
-                  isReadOnly={isNewLoginMode}
-                  size="lg"
-                  type="text"
-                  placeholder="你的个人秘钥"
-                  defaultValue={sk}
-                  onValueChange={setSk}
-                  endContent={
-                    isNewLoginMode && (
-                      <Button
-                        variant="light"
-                        color="default"
-                        onClick={() => {
-                          copyToClipboard(sk);
-                          onCopiedOpen();
-                        }}
-                      >
-                        复制
-                      </Button>
-                    )
-                  }
-                />
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  关闭
-                </Button>
-                <Button
-                  color="success"
-                  onPress={async () => {
-                    const res = await fetch(
-                      isNewLoginMode ? "/api/add-user" : "/api/recover-user",
-                      {
-                        method: "POST",
-                        body: JSON.stringify(
-                          isNewLoginMode ? { username, sk } : { sk }
-                        ),
-                      }
-                    );
+    <Modal
+      isOpen={user.showLoginModal}
+      size="lg"
+      placement={"bottom"}
+      onOpenChange={(isOpen) => {
+        if (isOpen) {
+          user.showLogin();
+        } else {
+          user.hideLogin();
+        }
+      }}
+      isDismissable={false}
+    >
+      <ModalContent>
+        {(onClose) => (
+          <>
+            <ModalHeader className="flex flex-col gap-1">登录</ModalHeader>
+            <ModalBody className="flex items-center">
+              <Textarea
+                placeholder="请输入你的个人秘钥"
+                value={secretKey}
+                onValueChange={setSecretKey}
+              />
+            </ModalBody>
+            <ModalFooter>
+              <Button color="danger" variant="light" onPress={onClose}>
+                关闭
+              </Button>
+              <Button
+                isLoading={isLoginLoading}
+                color="success"
+                onPress={async () => {
+                  try {
+                    setIsLoginLoading(true);
+                    const res = await fetch("/api/login", {
+                      method: "POST",
+                      body: JSON.stringify({ secretKey }),
+                    });
                     const { result } = await res.json();
-                    if (result) {
+                    if (result.id) {
+                      user.updateUserInfo(result);
                       onClose();
-                      saveUserData({
-                        username: result.username,
-                        sk: result.sk,
+                    } else {
+                      messageModal.show({
+                        content: "登录失败",
                       });
                     }
-                  }}
-                >
-                  确认
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-    </>
+                  } catch (error) {
+                    messageModal.show({
+                      content: "登录失败",
+                    });
+                  } finally {
+                    setIsLoginLoading(false);
+                  }
+                }}
+              >
+                确认
+              </Button>
+            </ModalFooter>
+          </>
+        )}
+      </ModalContent>
+    </Modal>
   );
-}
+});

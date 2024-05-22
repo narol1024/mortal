@@ -12,10 +12,12 @@ import {
 } from "@nextui-org/react";
 import { ExploreIcon } from "../icons/ExploreIcon";
 import { NewsCard } from "../NewsCard";
+import { observer } from "mobx-react-lite";
+import { useStores } from "@/hooks/userStores";
 
-export function News() {
-  const [newsList, setNewsList] = useState<any[]>([]);
+export const News = observer(() => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { news } = useStores();
 
   useEffect(() => {
     (async () => {
@@ -23,11 +25,13 @@ export function News() {
         method: "GET",
       });
       const { result } = await res.json();
-      if (result.length) {
-        setNewsList(result);
+      if (result && result.length) {
+        news.updateNewsList(result);
       }
     })();
   }, []);
+
+  console.log(news.newsList);
   return (
     <>
       <Button
@@ -51,13 +55,13 @@ export function News() {
               <ModalHeader className="flex flex-col gap-1">
                 带着Mortal看世界
               </ModalHeader>
-              {newsList.length === 0 ? (
+              {news.newsList.length === 0 ? (
                 <ModalBody className="min-h-64 py-4">
                   <Spinner />
                 </ModalBody>
               ) : (
                 <ModalBody className="block overflow-auto min-h-16 py-4 max-h-96">
-                  {newsList.map((news) => {
+                  {news.newsList.map((news) => {
                     return <NewsCard key={news.id} {...news} />;
                   })}
                 </ModalBody>
@@ -68,4 +72,4 @@ export function News() {
       </Modal>
     </>
   );
-}
+});

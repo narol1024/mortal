@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ebay/nice-modal-react": "^1.2.13",
     "@nextui-org/button": "^2.0.31",
     "@nextui-org/modal": "^2.0.33",
     "@nextui-org/react": "^2.3.6",
@@ -19,7 +20,12 @@
     "cobe": "^0.6.3",
     "dayjs": "^1.11.11",
     "framer-motion": "^11.2.4",
+    "jsencrypt": "^3.3.2",
+    "mobx": "^6.12.3",
+    "mobx-persist-store": "^1.1.5",
+    "mobx-react-lite": "^4.0.7",
     "next": "14.2.3",
+    "radash": "^12.1.0",
     "react": "^18",
     "react-dom": "^18",
     "react-spring": "^9.7.3"

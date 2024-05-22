@@ -4,9 +4,9 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   try {
     const { rows } = await sql`
-    SELECT Users.Username, News.Content, News.id, News.CreatedTime
-    FROM News
-    JOIN Users ON News.OwnerId = Users.Id;
+    SELECT users.username, users."avatarId", news.content, news.id, News."createdTime"
+    FROM news
+    JOIN users ON News."ownerId" = users.Id;
     `;
     if (rows.length > 0) {
       return new NextResponse(
@@ -18,6 +18,7 @@ export async function GET(request: Request) {
     }
     return NextResponse.json({ message: "Failed to query news", result: [] });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ error }, { status: 500 });
   }
 }

@@ -9,34 +9,34 @@ import {
   ModalFooter,
   Button,
   Input,
-  useDisclosure,
+  Textarea,
 } from "@nextui-org/react";
-import { useLocalStorage } from "@uidotdev/usehooks";
 import { CameraIcon } from "../icons/CameraIcon";
-import { UserData } from "../types";
+import { observer } from "mobx-react-lite";
+import { useModal } from "@ebay/nice-modal-react";
+import Message from "../Message";
+import { useStores } from "@/hooks/userStores";
 
-export function Publish() {
+export const Publish = observer(() => {
+  const [isPublishLoading, setIsPublishLoading] = useState(false);
   const [content, setContent] = useState("温馨提示，再不睡头发就要掉光光喽。");
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [userData] = useLocalStorage<UserData>("user");
-  if (!userData) {
-    return <></>;
-  }
+  const messageModal = useModal(Message);
+  const { user, news } = useStores();
+  const userInfo = user.userInfo;
+
   return (
     <>
-      <div className="flex justify-center flex-col gap-4">
-        <p className="w-full text-center">{userData.username}，你好</p>
-        <div className="flex justify-center">
-          <Button size="lg" variant="ghost" onClick={onOpen}>
-            去分享
-          </Button>
-        </div>
-      </div>
       <Modal
         size="lg"
-        isOpen={isOpen}
+        isOpen={news.showPublishModal}
         placement={"bottom"}
-        onOpenChange={onOpenChange}
+        onOpenChange={(isOpen) => {
+          if (isOpen) {
+            news.showPublish();
+          } else {
+            news.hidePublish();
+          }
+        }}
       >
         <ModalContent>
           {(onClose) => (
@@ -45,7 +45,7 @@ export function Publish() {
                 告诉Mortal，你的新鲜事
               </ModalHeader>
               <ModalBody>
-                <Input
+                <Textarea
                   size="lg"
                   type="text"
                   placeholder={content}
@@ -65,18 +65,35 @@ export function Publish() {
                   取消
                 </Button>
                 <Button
+                  isLoading={isPublishLoading}
                   color="primary"
                   onPress={async () => {
-                    let res = await fetch("/api/add-news", {
-                      method: "POST",
-                      body: JSON.stringify({
-                        content: content,
-                        sk: userData.sk,
-                      }),
-                    });
-                    const { result } = await res.json();
-                    if (result) {
-                      onClose();
+                    try {
+                      setIsPublishLoading(true);
+                      let res = await fetch("/api/add-news", {
+                        method: "POST",
+                        body: JSON.stringify({
+                          content: content,
+                          secretKey: userInfo.secretKey,
+                        }),
+                      });
+                      const { result } = await res.json();
+                      if (result) {
+                        onClose();
+                        messageModal.show({
+                          content: "发布成功",
+                        });
+                      } else {
+                        messageModal.show({
+                          content: "发布失败",
+                        });
+                      }
+                    } catch (error) {
+                      messageModal.show({
+                        content: "发布失败",
+                      });
+                    } finally {
+                      setIsPublishLoading(false);
                     }
                   }}
                 >
@@ -89,4 +106,4 @@ export function Publish() {
       </Modal>
     </>
   );
-}
+});

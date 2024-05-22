@@ -1,12 +1,14 @@
-export interface UserData {
+export interface UserInfo {
   id: number;
   username: string;
-  sk: string;
+  avatarId: number;
+  secretKey: string;
 }
 
 export interface NewsData {
   id: string;
   username: string;
+  avatarId: number;
   content: string;
   createdtime: number;
 }
