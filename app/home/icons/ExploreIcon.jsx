@@ -20,7 +20,6 @@ export const ExploreIcon = ({
             cy="5.5"
             r="2.5"
             fill="#ffffff"
-            className="color000 svgShape"
           ></circle>
           <path
             fill="none"
@@ -30,14 +29,12 @@ export const ExploreIcon = ({
             strokeMiterlimit="10"
             strokeWidth="2"
             d="M12.5 6h14"
-            className="colorStroke000 svgStroke"
           ></path>
           <circle
             cx="5"
             cy="14.5"
             r="2.5"
             fill="#ffffff"
-            className="color000 svgShape"
           ></circle>
           <path
             fill="none"
@@ -47,14 +44,12 @@ export const ExploreIcon = ({
             strokeMiterlimit="10"
             strokeWidth="2"
             d="M12.5 15h14"
-            className="colorStroke000 svgStroke"
           ></path>
           <circle
             cx="5"
             cy="23.5"
             r="2.5"
             fill="#ffffff"
-            className="color000 svgShape"
           ></circle>
           <path
             fill="none"
@@ -64,7 +59,6 @@ export const ExploreIcon = ({
             strokeMiterlimit="10"
             strokeWidth="2"
             d="M12.5 24h14"
-            className="colorStroke000 svgStroke"
           ></path>
         </svg>
       </g>

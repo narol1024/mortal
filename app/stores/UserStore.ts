@@ -1,9 +1,6 @@
 import { UserInfo } from "@/types";
 import { makeAutoObservable } from "mobx";
-import { enableStaticRendering } from "mobx-react-lite";
 import { makePersistable } from "mobx-persist-store";
-
-enableStaticRendering(typeof window === "undefined");
 
 export class UserStore {
   userInfo: Partial<UserInfo> = {};

@@ -1,17 +1,21 @@
 "use client";
 
 import createGlobe from "cobe";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSpring } from "react-spring";
+import { useStores } from "@/hooks/useStores";
+import { observer } from "mobx-react-lite";
 
-export function Cobe() {
+export const Cobe = observer(() => {
+  const { news, location } = useStores();
+  const focusRef = useRef([-1, -1]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pointerInteracting = useRef<{ x: number; y: number } | null>(null);
   const pointerInteractionMovement = useRef({
     x: 0,
     y: 0,
   });
-  const [{ rx, ry }, api] = useSpring(() => ({
+  const [{ rx, ry }, springApi] = useSpring(() => ({
     rx: 0,
     ry: 0,
     config: {
@@ -21,10 +25,20 @@ export function Cobe() {
       precision: 0.001,
     },
   }));
+  const locationToAngles = (long: number, lat: number) => {
+    return [
+      Math.PI - ((long * Math.PI) / 180 - Math.PI / 2),
+      (lat * Math.PI) / 180,
+    ];
+  };
   useEffect(() => {
     let phi = 0;
     let theta = 0;
     let width = 0;
+    let currentPhi = 0;
+    let currentTheta = 0;
+    const doublePi = Math.PI * 2;
+
     if (canvasRef.current) {
       width = canvasRef.current.offsetWidth;
       const onResize = () =>
@@ -45,19 +59,32 @@ export function Cobe() {
         markerColor: [251 / 255, 100 / 255, 21 / 255],
         glowColor: [1.2, 1.2, 1.2],
         markers: [
-          // longitude latitude
           { location: [37.7595, -122.4367], size: 0.03 },
           { location: [40.7128, -74.006], size: 0.1 },
         ],
         onRender: (state) => {
-          // This prevents rotation while dragging
-          if (!pointerInteracting.current) {
-            // Called on every animation frame.
-            // `state` will be an empty object, return updated params.
-            phi += 0.005;
+          const isAutoRotation =
+            focusRef.current[0] === -1 && focusRef.current[1] === -1;
+          if (isAutoRotation) {
+            if (!pointerInteracting.current) {
+              phi += 0.005;
+            }
+            state.phi = phi + rx.get();
+            state.theta = theta + ry.get();
+          } else {
+            state.phi = currentPhi;
+            state.theta = currentTheta;
+            const [focusPhi, focusTheta] = focusRef.current;
+            const distPositive = (focusPhi - currentPhi + doublePi) % doublePi;
+            const distNegative = (currentPhi - focusPhi + doublePi) % doublePi;
+            // Control the speed
+            if (distPositive < distNegative) {
+              currentPhi += distPositive * 0.08;
+            } else {
+              currentPhi -= distNegative * 0.08;
+            }
+            currentTheta = currentTheta * 0.92 + focusTheta * 0.08;
           }
-          state.phi = phi + rx.get();
-          state.theta = theta + ry.get();
           state.width = width * 2;
           state.height = width * 2;
         },
@@ -68,6 +95,16 @@ export function Cobe() {
       };
     }
   }, []);
+  useEffect(() => {
+    if (news.showPublishModal) {
+      focusRef.current = locationToAngles(
+        location.longitude,
+        location.latitude
+      );
+    } else {
+      focusRef.current = [-1, -1];
+    }
+  }, [news.showPublishModal]);
   return (
     <div
       style={{
@@ -99,7 +136,7 @@ export function Cobe() {
               y: e.clientY - pointerInteracting.current.y,
             };
             pointerInteractionMovement.current = delta;
-            api.start({
+            springApi.start({
               rx: delta.x / 200,
               ry: delta.y / 200,
             });
@@ -112,18 +149,14 @@ export function Cobe() {
               y: e.touches[0].clientY - pointerInteracting.current.y,
             };
             pointerInteractionMovement.current = delta;
-            api.start({
+            springApi.start({
               rx: delta.x / 100,
               ry: delta.y / 100,
             });
           }
         }}
-        style={{
-          width: "100%",
-          height: "100%",
-          cursor: "grab",
-        }}
+        className="w-full h-full cursor-grab"
       />
     </div>
   );
-}
+});

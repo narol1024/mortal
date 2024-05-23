@@ -8,7 +8,8 @@ export async function GET() {
         "id" serial NOT NULL, 
         "username" varchar(255), 
         "avatarId" int, 
-        "pwd" varchar(255) 
+        "pwd" varchar(255),
+        "createdTime" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
       `;
     return NextResponse.json({ result }, { status: 200 });

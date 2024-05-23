@@ -22,6 +22,7 @@ export const News = observer(() => {
   useEffect(() => {
     (async () => {
       const res = await fetch("/api/news", {
+        cache: "no-store",
         method: "GET",
       });
       const { result } = await res.json();

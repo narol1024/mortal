@@ -4,7 +4,8 @@ import React from "react";
 import { Button, Image, Link } from "@nextui-org/react";
 import { Cobe } from "./Cobe";
 import { News } from "./News";
-import { Publish } from "./Publish";
+import { Post } from "./Post";
+import { Location } from "./Location";
 import { Register } from "./Register";
 import { Login } from "./Login";
 import avatar from "@/assets/logo.png";
@@ -21,8 +22,9 @@ const HomePage = observer(() => {
         <Cobe />
         <Register />
         <Login />
-        <Publish />
+        <Post />
         <News />
+        <Location />
         {!isLogined && (
           <div className="flex justify-center gap-10">
             <Button

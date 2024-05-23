@@ -9,7 +9,9 @@ export async function GET(request: Request) {
         "ownerId" integer,
         "content" varchar(1024),
         "picture" varchar(255),
-        "createdTime" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        "createdTime" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        "latitude" float,
+        "longitude" float
       );
     `;
     return NextResponse.json({ result }, { status: 200 });

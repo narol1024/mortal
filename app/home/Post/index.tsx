@@ -8,7 +8,6 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  Input,
   Textarea,
 } from "@nextui-org/react";
 import { CameraIcon } from "../icons/CameraIcon";
@@ -17,13 +16,12 @@ import { useModal } from "@ebay/nice-modal-react";
 import Message from "../Message";
 import { useStores } from "@/hooks/useStores";
 
-export const Publish = observer(() => {
+export const Post = observer(() => {
   const [isPublishLoading, setIsPublishLoading] = useState(false);
   const [content, setContent] = useState("温馨提示，再不睡头发就要掉光光喽。");
+  const { user, news, location } = useStores();
   const messageModal = useModal(Message);
-  const { user, news } = useStores();
   const userInfo = user.userInfo;
-
   return (
     <>
       <Modal
@@ -52,13 +50,16 @@ export const Publish = observer(() => {
                   defaultValue={content}
                   onValueChange={setContent}
                 />
-                <Button
-                  variant="ghost"
-                  color="default"
-                  startContent={<CameraIcon />}
-                >
-                  上传图片
-                </Button>
+                <div className="flex gap-2 justify-between items-center">
+                  <Button
+                    size="md"
+                    variant="ghost"
+                    color="default"
+                    startContent={<CameraIcon width={16} height={16} />}
+                  >
+                    图片
+                  </Button>
+                </div>
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>
@@ -75,6 +76,8 @@ export const Publish = observer(() => {
                         body: JSON.stringify({
                           content: content,
                           secretKey: userInfo.secretKey,
+                          longitude: location.longitude,
+                          latitude: location.latitude,
                         }),
                       });
                       const { result } = await res.json();
