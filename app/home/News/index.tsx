@@ -13,7 +13,7 @@ import {
 import { ExploreIcon } from "../icons/ExploreIcon";
 import { NewsCard } from "../NewsCard";
 import { observer } from "mobx-react-lite";
-import { useStores } from "@/hooks/userStores";
+import { useStores } from "@/hooks/useStores";
 
 export const News = observer(() => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -31,7 +31,6 @@ export const News = observer(() => {
     })();
   }, []);
 
-  console.log(news.newsList);
   return (
     <>
       <Button

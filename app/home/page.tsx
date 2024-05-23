@@ -8,7 +8,7 @@ import { Publish } from "./Publish";
 import { Register } from "./Register";
 import { Login } from "./Login";
 import avatar from "@/assets/logo.png";
-import { useStores } from "@/hooks/userStores";
+import { useStores } from "@/hooks/useStores";
 import { observer } from "mobx-react-lite";
 
 const HomePage = observer(() => {

@@ -15,7 +15,7 @@ import { CameraIcon } from "../icons/CameraIcon";
 import { observer } from "mobx-react-lite";
 import { useModal } from "@ebay/nice-modal-react";
 import Message from "../Message";
-import { useStores } from "@/hooks/userStores";
+import { useStores } from "@/hooks/useStores";
 
 export const Publish = observer(() => {
   const [isPublishLoading, setIsPublishLoading] = useState(false);

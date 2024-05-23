@@ -11,7 +11,7 @@ import {
   Textarea,
 } from "@nextui-org/react";
 
-import { useStores } from "@/hooks/userStores";
+import { useStores } from "@/hooks/useStores";
 import { observer } from "mobx-react-lite";
 import { useModal } from "@ebay/nice-modal-react";
 import Message from "../Message";

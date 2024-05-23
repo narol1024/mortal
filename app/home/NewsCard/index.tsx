@@ -5,14 +5,17 @@ import {
   Card as RawCard,
   CardHeader,
   CardBody,
-  CardFooter,
   Divider,
-  Link,
   Image,
 } from "@nextui-org/react";
 import dayjs from "dayjs";
 import { NewsData } from "@/types";
 import { avatars } from "@/constants";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export function NewsCard(props: NewsData) {
   return (
@@ -22,7 +25,7 @@ export function NewsCard(props: NewsData) {
         <div className="flex flex-col">
           <p className="text-small">{props.username}</p>
           <p className="text-small text-default-500">
-            {dayjs(props.createdtime).format("YYYY/MM/DD HH:mm:ss")}
+            {dayjs.utc(props.createdTime).local().format("YYYY/MM/DD HH:mm:ss")}
           </p>
         </div>
       </CardHeader>

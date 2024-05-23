@@ -19,7 +19,7 @@ import { useModal } from "@ebay/nice-modal-react";
 import Message from "../Message";
 import { InfoIcon } from "../icons/InfoIcon";
 import { observer } from "mobx-react-lite";
-import { useStores } from "@/hooks/userStores";
+import { useStores } from "@/hooks/useStores";
 
 import { avatars } from "@/constants";
 

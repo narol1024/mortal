@@ -10,5 +10,5 @@ export interface NewsData {
   username: string;
   avatarId: number;
   content: string;
-  createdtime: number;
+  createdTime: number;
 }
