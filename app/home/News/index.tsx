@@ -49,7 +49,7 @@ export const News = observer(() => {
         onOpenChange={onOpenChange}
       >
         <ModalContent>
-          {(onClose) => (
+          {() => (
             <>
               <ModalHeader className="flex flex-col gap-1">
                 带着Mortal看世界
