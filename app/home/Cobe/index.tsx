@@ -27,6 +27,10 @@ export function Cobe() {
     let width = 0;
     if (canvasRef.current) {
       width = canvasRef.current.offsetWidth;
+      const onResize = () =>
+        canvasRef.current && (width = canvasRef.current.offsetWidth);
+      window.addEventListener("resize", onResize);
+      onResize();
       const globe = createGlobe(canvasRef.current, {
         devicePixelRatio: 2,
         width: width * 2,
@@ -60,6 +64,7 @@ export function Cobe() {
       });
       return () => {
         globe.destroy();
+        window.removeEventListener("resize", onResize);
       };
     }
   }, []);
@@ -68,7 +73,7 @@ export function Cobe() {
       style={{
         aspectRatio: 1,
       }}
-      className="relative max-w-[640px] m-auto"
+      className="relative max-w-lg m-auto"
     >
       <canvas
         ref={canvasRef}
