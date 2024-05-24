@@ -1,9 +1,16 @@
-import { NewsData } from "@/types";
+import { DraftData, NewsData } from "@/types";
 import { makeAutoObservable } from "mobx";
+import { makePersistable } from "mobx-persist-store";
+
+const draftData = {
+  content: "温馨提示，再不睡头发就要掉光光喽。",
+  photoUrls: [],
+};
 
 export class NewsStore {
+  isPosting = false;
+  draft: DraftData = draftData;
   newsList: NewsData[] = [];
-  showPublishModal = false;
   constructor() {
     makeAutoObservable(this);
   }
@@ -11,10 +18,19 @@ export class NewsStore {
     // TODO: 多页
     this.newsList = [...list];
   };
-  showPublish = () => {
-    this.showPublishModal = true;
+  updateDraft = (draft: Partial<DraftData>) => {
+    this.draft = {
+      ...this.draft,
+      ...draft,
+    };
   };
-  hidePublish = () => {
-    this.showPublishModal = false;
+  clearDraft = () => {
+    this.draft = draftData;
+  };
+  showPostingModal = () => {
+    this.isPosting = true;
+  };
+  hidePostingModal = () => {
+    this.isPosting = false;
   };
 }

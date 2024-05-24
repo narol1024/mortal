@@ -8,7 +8,7 @@ export async function GET(request: Request) {
         "id" serial NOT NULL,
         "ownerId" integer,
         "content" varchar(1024),
-        "picture" varchar(255),
+        "pictures" varchar(1024)[],
         "createdTime" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         "latitude" float,
         "longitude" float

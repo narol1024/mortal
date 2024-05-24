@@ -54,6 +54,7 @@ export const Register = observer(() => {
         copyToClipboard(publickKey);
         setTimeout(() => {
           messageModal2.show({
+            type: "success",
             title: "注册成功",
             content: "请保存好你的密钥到本地，以便下次再次登录。",
           });
@@ -129,6 +130,7 @@ export const Register = observer(() => {
                       onRegisterSuccess(result.secretKey);
                     } else {
                       messageModal.show({
+                        type: "failure",
                         title: "注册失败",
                         content:
                           "看起来注册过程中发生了一点小波折。请仔细检查您的信息是否有误。",
@@ -136,6 +138,7 @@ export const Register = observer(() => {
                     }
                   } catch (error) {
                     messageModal.show({
+                      type: "failure",
                       title: "注册失败",
                       content:
                         "看起来注册过程中发生了一点小波折。请仔细检查您的信息是否有误。",

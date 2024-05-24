@@ -57,7 +57,7 @@ const HomePage = observer(() => {
                 size="lg"
                 variant="ghost"
                 onClick={() => {
-                  news.showPublish();
+                  news.showPostingModal();
                 }}
               >
                 去分享

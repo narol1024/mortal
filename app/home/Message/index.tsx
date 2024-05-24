@@ -10,10 +10,14 @@ import {
   Button,
 } from "@nextui-org/react";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
+import { OKIcon } from "../icons/OKIcon";
+import { ErrorIcon } from "../icons/ErrorIcon";
 import { isString } from "radash";
+import { commonColors } from "@nextui-org/theme";
 
 interface MessageProps {
   title?: string;
+  type: "default" | "success" | "failure";
   content?: string | React.ReactNode;
   cancelText?: string;
   okText?: string;
@@ -29,6 +33,7 @@ export default NiceModal.create((props: MessageProps) => {
   const {
     title,
     content,
+    type = "default",
     cancelText = "取消",
     okText = "好的",
     showCancelButton = false,
@@ -54,7 +59,27 @@ export default NiceModal.create((props: MessageProps) => {
           <>
             <ModalHeader className="flex flex-col gap-1">{title}</ModalHeader>
             <ModalBody>
-              {isString(content) ? <p>{content}</p> : content}
+              {isString(content) ? (
+                <div className="flex flex-row items-center gap-2">
+                  {type === "success" && (
+                    <OKIcon
+                      width={28}
+                      height={28}
+                      color={commonColors.green[500]}
+                    />
+                  )}
+                  {type === "failure" && (
+                    <ErrorIcon
+                      width={28}
+                      height={28}
+                      color={commonColors.red[500]}
+                    />
+                  )}
+                  <p>{content}</p>
+                </div>
+              ) : (
+                content
+              )}
             </ModalBody>
             <ModalFooter>
               {showCancelButton && (

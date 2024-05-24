@@ -1,7 +1,7 @@
 import React from "react";
 
 export const ExploreIcon = ({
-  fill = "currentColor",
+  color = "#ffffff",
   height = 24,
   width = 24,
   ...props
@@ -19,11 +19,11 @@ export const ExploreIcon = ({
             cx="5"
             cy="5.5"
             r="2.5"
-            fill="#ffffff"
+            fill={color}
           ></circle>
           <path
             fill="none"
-            stroke="#ffffff"
+            stroke={color}
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeMiterlimit="10"
@@ -34,11 +34,11 @@ export const ExploreIcon = ({
             cx="5"
             cy="14.5"
             r="2.5"
-            fill="#ffffff"
+            fill={color}
           ></circle>
           <path
             fill="none"
-            stroke="#ffffff"
+            stroke={color}
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeMiterlimit="10"
@@ -49,11 +49,11 @@ export const ExploreIcon = ({
             cx="5"
             cy="23.5"
             r="2.5"
-            fill="#ffffff"
+            fill={color}
           ></circle>
           <path
             fill="none"
-            stroke="#ffffff"
+            stroke={color}
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeMiterlimit="10"

@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   try {
     const { rows } = await sql`
-    SELECT users.username, users."avatarId", news.content, news.id, News."createdTime" AT TIME ZONE 'UTC' AS "createdTime"
+    SELECT users.username, news.id, users."avatarId", news.content, news.pictures, News."createdTime" AT TIME ZONE 'UTC' AS "createdTime"
     FROM news 
     JOIN users ON News."ownerId" = users.Id
     ORDER BY news."createdTime" DESC

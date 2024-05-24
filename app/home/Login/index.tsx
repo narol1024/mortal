@@ -41,7 +41,7 @@ export const Login = observer(() => {
             <ModalHeader className="flex flex-col gap-1">登录</ModalHeader>
             <ModalBody className="flex items-center">
               <Textarea
-                placeholder="请输入你的个人秘钥"
+                placeholder="请输入个人秘钥"
                 value={secretKey}
                 onValueChange={setSecretKey}
               />
@@ -66,11 +66,13 @@ export const Login = observer(() => {
                       onClose();
                     } else {
                       messageModal.show({
+                        type: "failure",
                         content: "登录失败",
                       });
                     }
                   } catch (error) {
                     messageModal.show({
+                      type: "failure",
                       content: "登录失败",
                     });
                   } finally {

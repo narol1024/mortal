@@ -37,8 +37,6 @@ export const Cobe = observer(() => {
     let width = 0;
     let currentPhi = 0;
     let currentTheta = 0;
-    const doublePi = Math.PI * 2;
-
     if (canvasRef.current) {
       width = canvasRef.current.offsetWidth;
       const onResize = () =>
@@ -66,14 +64,21 @@ export const Cobe = observer(() => {
           const isAutoRotation =
             focusRef.current[0] === -1 && focusRef.current[1] === -1;
           if (isAutoRotation) {
+            // It automatically rotates when there is no user interaction.
             if (!pointerInteracting.current) {
               phi += 0.005;
             }
+
             state.phi = phi + rx.get();
             state.theta = theta + ry.get();
+
+            // 切换到focus模式，保存需要参与计算的变量
+            currentPhi = state.phi;
+            currentTheta = state.theta;
           } else {
             state.phi = currentPhi;
             state.theta = currentTheta;
+            const doublePi = Math.PI * 2;
             const [focusPhi, focusTheta] = focusRef.current;
             const distPositive = (focusPhi - currentPhi + doublePi) % doublePi;
             const distNegative = (currentPhi - focusPhi + doublePi) % doublePi;
@@ -84,6 +89,14 @@ export const Cobe = observer(() => {
               currentPhi -= distNegative * 0.08;
             }
             currentTheta = currentTheta * 0.92 + focusTheta * 0.08;
+
+            // 切换到动画模式，保存需要参与计算的变量
+            phi = currentPhi;
+            theta = currentTheta;
+            springApi.start({
+              rx: 0,
+              ry: 0,
+            });
           }
           state.width = width * 2;
           state.height = width * 2;
@@ -96,15 +109,13 @@ export const Cobe = observer(() => {
     }
   }, []);
   useEffect(() => {
-    if (news.showPublishModal) {
-      focusRef.current = locationToAngles(
-        location.longitude,
-        location.latitude
-      );
+    if (news.isPosting) {
+      const { longitude, latitude } = location;
+      focusRef.current = locationToAngles(longitude, latitude);
     } else {
       focusRef.current = [-1, -1];
     }
-  }, [news.showPublishModal]);
+  }, [news.isPosting]);
   return (
     <div
       style={{

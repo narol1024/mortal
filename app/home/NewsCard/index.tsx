@@ -30,7 +30,14 @@ export function NewsCard(props: NewsData) {
         </div>
       </CardHeader>
       <CardBody>
-        <p>{props.content}</p>
+        <p className="mb-2">{props.content}</p>
+        {props.pictures[0] && (
+          <Image
+            height={80}
+            src={props.pictures[0]}
+            className="object-contain w-full"
+          />
+        )}
       </CardBody>
       <Divider />
     </RawCard>

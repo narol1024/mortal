@@ -10,5 +10,11 @@ export interface NewsData {
   username: string;
   avatarId: number;
   content: string;
+  pictures: string[];
   createdTime: number;
+}
+
+export interface DraftData {
+  content: string;
+  photoUrls: { uploaded: boolean; src: string; file: File | null }[];
 }
