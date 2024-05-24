@@ -104,6 +104,7 @@ export const Post = observer(() => {
         size="lg"
         isOpen={news.isPosting}
         placement={"bottom"}
+        className="min-w-[80%]"
         onOpenChange={(isOpen) => {
           if (isOpen) {
             news.showPostingModal();

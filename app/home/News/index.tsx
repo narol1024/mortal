@@ -44,10 +44,10 @@ export const News = observer(() => {
         <ExploreIcon width={32} height={32} />
       </Button>
       <Modal
-        size="lg"
         placement="bottom"
         isOpen={isOpen}
         onOpenChange={onOpenChange}
+        className="min-w-[80%]"
       >
         <ModalContent>
           {() => (
@@ -60,7 +60,7 @@ export const News = observer(() => {
                   <Spinner />
                 </ModalBody>
               ) : (
-                <ModalBody className="block overflow-auto min-h-16 py-4 max-h-96">
+                <ModalBody className="block overflow-auto min-h-72 py-4 max-h-[60vh]">
                   {news.newsList.map((news) => {
                     return <NewsCard key={news.id} {...news} />;
                   })}

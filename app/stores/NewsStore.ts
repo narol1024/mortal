@@ -3,7 +3,7 @@ import { makeAutoObservable } from "mobx";
 import { makePersistable } from "mobx-persist-store";
 
 const draftData = {
-  content: "温馨提示，再不睡头发就要掉光光喽。",
+  content: "",
   photoUrls: [],
 };
 
