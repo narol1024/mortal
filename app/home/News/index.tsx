@@ -47,7 +47,7 @@ export const News = observer(() => {
         placement="bottom"
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        className="min-w-[80%]"
+        className="min-w-[60%]"
       >
         <ModalContent>
           {() => (

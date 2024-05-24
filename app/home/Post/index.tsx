@@ -104,7 +104,7 @@ export const Post = observer(() => {
         size="lg"
         isOpen={news.isPosting}
         placement={"bottom"}
-        className="min-w-[80%]"
+        className="min-w-[60%]"
         onOpenChange={(isOpen) => {
           if (isOpen) {
             news.showPostingModal();
@@ -221,7 +221,7 @@ export const Post = observer(() => {
                     }
                   }}
                 >
-                  发送出去
+                  发送
                 </Button>
               </ModalFooter>
             </>
