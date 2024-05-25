@@ -14,6 +14,10 @@ export default function RootLayout({
 }>) {
   return (
     <html className="dark">
+      <script
+        src="https://gosspublic.alicdn.com/aliyun-oss-sdk-6.18.0.min.js"
+        async
+      ></script>
       <body className="p-4">
         <Providers>
           <ClientOnly>{children}</ClientOnly>
