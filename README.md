@@ -2,9 +2,9 @@
 
 Nowadays, the available MVP (Minimum Viable Product) has been published. You can experience it here: https://mortal-fawn.vercel.app/. 
 
-Actually, The motivations for creating this app are as follows:
+Actually, the motivations for creating this app are as follows:
 
-- In memory of [Mortal](https://www.baike.com/wikiid/7353255952306618408), a cancer patient who still loved life.
+- In memory of [Mortal](https://www.baike.com/wikiid/7353255952306618408), a cancer patient who still loved her life.
 - As a tiny project, it aims to enhance my skills and become more familiar with Vercel platform.
 
 

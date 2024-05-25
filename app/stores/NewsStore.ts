@@ -1,6 +1,5 @@
 import { DraftData, NewsData } from "@/types";
 import { makeAutoObservable } from "mobx";
-import { makePersistable } from "mobx-persist-store";
 
 const draftData = {
   content: "",

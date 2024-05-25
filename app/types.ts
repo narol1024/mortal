@@ -1,3 +1,9 @@
+declare global {
+  interface Window {
+    OSS: any;
+  }
+}
+
 export interface UserInfo {
   id: number;
   username: string;

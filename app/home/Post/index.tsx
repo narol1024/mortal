@@ -11,7 +11,7 @@ import {
   Textarea,
   Image,
 } from "@nextui-org/react";
-import { upload } from "@vercel/blob/client";
+import { uploadFileOnAliCloudOSS } from "@/util/uploadFile";
 import { CameraIcon } from "../icons/CameraIcon";
 import { TrashIcon } from "../icons/TrashIcon";
 import { observer } from "mobx-react-lite";
@@ -19,7 +19,6 @@ import { useModal } from "@ebay/nice-modal-react";
 import Message from "../Message";
 import { useStores } from "@/hooks/useStores";
 import { commonColors } from "@nextui-org/theme";
-import { PutBlobResult } from "@vercel/blob";
 
 export const PhotoUploader = observer(() => {
   const { news } = useStores();
@@ -161,22 +160,14 @@ export const Post = observer(() => {
                         !currentPhoto.uploaded &&
                         currentPhoto.file
                       ) {
-                        const file = currentPhoto.file;
-                        const response = await fetch(
-                          `/api/photo-upload?filename=${file.name}`,
-                          {
-                            method: "POST",
-                            body: file,
-                          }
-                        );
                         try {
-                          const newBlob =
-                            (await response.json()) as PutBlobResult;
+                          const file = currentPhoto.file;
+                          const response = await uploadFileOnAliCloudOSS(file);
                           photoUrls = [
                             {
                               file: null,
                               uploaded: true,
-                              src: newBlob.url,
+                              src: response.url,
                             },
                           ];
                         } catch (error) {
