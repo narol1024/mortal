@@ -11,6 +11,7 @@ import { Login } from "./Login";
 import avatar from "@/assets/logo.png";
 import { useStores } from "@/hooks/useStores";
 import { observer } from "mobx-react-lite";
+import { List as ListIcon } from "lucide-react";
 
 const HomePage = observer(() => {
   const { user, news } = useStores();
@@ -19,6 +20,17 @@ const HomePage = observer(() => {
   return (
     <>
       <div className="relative w-full">
+        <Button
+          isIconOnly
+          variant="light"
+          aria-label="Explore"
+          className="absolute top-0 left-0"
+          onClick={() => {
+            news.showNewListModal();
+          }}
+        >
+          <ListIcon width={32} height={32} />
+        </Button>
         <Cobe />
         <Register />
         <Login />

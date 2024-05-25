@@ -10,8 +10,8 @@ import {
   Button,
 } from "@nextui-org/react";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
-import { OKIcon } from "../icons/OKIcon";
-import { ErrorIcon } from "../icons/ErrorIcon";
+import { Check as CheckIcon } from "lucide-react";
+import { X as XIcon } from "lucide-react";
 import { isString } from "radash";
 import { commonColors } from "@nextui-org/theme";
 
@@ -62,14 +62,14 @@ export default NiceModal.create((props: MessageProps) => {
               {isString(content) ? (
                 <div className="flex flex-row items-center gap-2">
                   {type === "success" && (
-                    <OKIcon
+                    <CheckIcon
                       width={28}
                       height={28}
                       color={commonColors.green[500]}
                     />
                   )}
                   {type === "failure" && (
-                    <ErrorIcon
+                    <XIcon
                       width={28}
                       height={28}
                       color={commonColors.red[500]}

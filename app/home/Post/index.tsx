@@ -12,8 +12,8 @@ import {
   Image,
 } from "@nextui-org/react";
 import { uploadFileOnAliCloudOSS } from "@/util/uploadFile";
-import { CameraIcon } from "../icons/CameraIcon";
-import { TrashIcon } from "../icons/TrashIcon";
+import { ImageUp as ImageUpIcon } from "lucide-react";
+import { Trash2 as TrashIcon } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useModal } from "@ebay/nice-modal-react";
 import Message from "../Message";
@@ -44,7 +44,7 @@ export const PhotoUploader = observer(() => {
             });
           }}
         >
-          <TrashIcon color={commonColors.red[500]} />
+          <TrashIcon width={20} height={20} color={commonColors.red[500]} />
         </div>
       </div>
     );
@@ -79,7 +79,7 @@ export const PhotoUploader = observer(() => {
         size="md"
         variant="ghost"
         color="default"
-        startContent={<CameraIcon width={16} height={16} />}
+        startContent={<ImageUpIcon width={20} height={20} />}
         onClick={() => {
           hiddenFileInput.current?.click();
         }}
