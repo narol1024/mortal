@@ -16,7 +16,7 @@ Actually, the motivations for creating this app are as follows:
 - Signing up account.
 - Logging in using secret key.
 - Posting amazing moment in your life.
-- Browsing recent news feeds by each Mortal.
+- Browsing lastest news feeds posting by each Mortal.
 
 ## Next Plans
 

@@ -24,7 +24,7 @@ const HomePage = observer(() => {
           isIconOnly
           variant="light"
           aria-label="Explore"
-          className="absolute top-0 left-0"
+          className="absolute z-10 top-0 left-0"
           onClick={() => {
             news.showNewListModal();
           }}
