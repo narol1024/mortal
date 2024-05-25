@@ -1,6 +1,9 @@
 # Mortal
 
-Nowadays, the available MVP (Minimum Viable Product) has been published. You can experience it here: https://mortal-fawn.vercel.app/. 
+Right now, the available MVP (Minimum Viable Product) has been published. You can experience it here: https://mortal.zone/ 
+
+> [!IMPORTANT]
+> I have tried using Cloudflare DNS to route the requests from the domain https://mortal.zone, and it appears to be available now. However, if your network isn't blocked, https://mortal-fawn.vercel.app/ is still highly recommended.
 
 Actually, the motivations for creating this app are as follows:
 

@@ -17,7 +17,7 @@ import { getRandomString } from "@/util/randomString";
 import { getRangeNumber } from "@/util/rangeNumber";
 import { useModal } from "@ebay/nice-modal-react";
 import Message from "../Message";
-import { InfoIcon } from "../icons/InfoIcon";
+import { Info as InfoIcon } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useStores } from "@/hooks/useStores";
 

@@ -10,6 +10,7 @@ export class NewsStore {
   isPosting = false;
   draft: DraftData = draftData;
   newsList: NewsData[] = [];
+  showNewList = false;
   constructor() {
     makeAutoObservable(this);
   }
@@ -31,5 +32,11 @@ export class NewsStore {
   };
   hidePostingModal = () => {
     this.isPosting = false;
+  };
+  showNewListModal = () => {
+    this.showNewList = true;
+  };
+  hideNewListModal = () => {
+    this.showNewList = false;
   };
 }
