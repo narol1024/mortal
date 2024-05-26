@@ -15,8 +15,7 @@ export class NewsStore {
     makeAutoObservable(this);
   }
   updateNewsList = (list: NewsData[]) => {
-    // TODO: 多页
-    this.newsList = [...list];
+    this.newsList = this.newsList.concat(list);
   };
   updateDraft = (draft: Partial<DraftData>) => {
     this.draft = {

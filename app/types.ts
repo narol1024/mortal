@@ -18,6 +18,8 @@ export interface NewsData {
   content: string;
   pictures: string[];
   createdTime: number;
+  longitude: number;
+  latitude: number;
 }
 
 export interface DraftData {

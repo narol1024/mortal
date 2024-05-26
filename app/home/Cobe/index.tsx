@@ -8,6 +8,7 @@ import { observer } from "mobx-react-lite";
 
 export const Cobe = observer(() => {
   const { news, location } = useStores();
+  const newsList = news.newsList;
   const focusRef = useRef([-1, -1]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pointerInteracting = useRef<{ x: number; y: number } | null>(null);
@@ -43,6 +44,14 @@ export const Cobe = observer(() => {
         canvasRef.current && (width = canvasRef.current.offsetWidth);
       window.addEventListener("resize", onResize);
       onResize();
+      console.log(
+        newsList.map((newsItem) => {
+          return {
+            location: [newsItem.longitude, newsItem.latitude],
+            size: 0.1,
+          };
+        })
+      );
       const globe = createGlobe(canvasRef.current, {
         devicePixelRatio: 2,
         width: width * 2,
@@ -56,10 +65,12 @@ export const Cobe = observer(() => {
         baseColor: [1, 1, 1],
         markerColor: [251 / 255, 100 / 255, 21 / 255],
         glowColor: [1.2, 1.2, 1.2],
-        markers: [
-          { location: [37.7595, -122.4367], size: 0.03 },
-          { location: [40.7128, -74.006], size: 0.1 },
-        ],
+        markers: newsList.map((newsItem) => {
+          return {
+            location: [newsItem.latitude, newsItem.longitude],
+            size: 0.1,
+          };
+        }),
         onRender: (state) => {
           const isAutoRotation =
             focusRef.current[0] === -1 && focusRef.current[1] === -1;
@@ -107,7 +118,8 @@ export const Cobe = observer(() => {
         window.removeEventListener("resize", onResize);
       };
     }
-  }, []);
+  }, [newsList]);
+
   useEffect(() => {
     if (news.isPosting) {
       const { longitude, latitude } = location;
@@ -116,6 +128,7 @@ export const Cobe = observer(() => {
       focusRef.current = [-1, -1];
     }
   }, [news.isPosting]);
+
   return (
     <div
       style={{
