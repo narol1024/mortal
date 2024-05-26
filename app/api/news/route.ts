@@ -3,11 +3,24 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   try {
+    // Extract query parameters for pagination
+    const url = new URL(request.url);
+    const _pageNum = url.searchParams.get("pageNum");
+    const _pageSize = url.searchParams.get("pageSize");
+    if (!_pageNum || !_pageSize) {
+      throw new Error("pageNum and pageSize required");
+    }
+    const pageNum = parseInt(_pageNum, 10);
+    const pageSize = parseInt(_pageSize, 10);
+    const offset = pageNum * pageSize;
+
     const { rows } = await sql`
-    SELECT users.username, news.id, users."avatarId", news.content, news.pictures, News."createdTime" AT TIME ZONE 'UTC' AS "createdTime"
-    FROM news 
-    JOIN users ON News."ownerId" = users.Id
-    ORDER BY news."createdTime" DESC
+      SELECT users.username, news.id, users."avatarId", news.content, news.pictures, news."createdTime" AT TIME ZONE 'UTC' AS "createdTime", news.longitude, news.latitude
+      FROM news 
+      JOIN users ON News."ownerId" = users.Id
+      ORDER BY news."createdTime" DESC
+      LIMIT ${pageSize}
+      OFFSET ${offset}
     `;
     if (rows.length > 0) {
       return new NextResponse(

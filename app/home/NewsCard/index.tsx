@@ -17,10 +17,18 @@ import timezone from "dayjs/plugin/timezone";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export function NewsCard(props: NewsData) {
+interface NewsCardProps extends NewsData {
+  isLast?: boolean;
+}
+
+export const NewsCard = React.memo(function NewsCard(props: NewsCardProps) {
+  const hasPicture = props.pictures.length > 0;
   return (
-    <RawCard shadow="none" className="mb-8">
-      <CardHeader className="flex gap-3">
+    <RawCard
+      shadow="none"
+      className={`flex flex-col mb-8 ${hasPicture ? "h-[280px]" : "h-[180px]"}`}
+    >
+      <CardHeader className="flex flex-shrink-0 gap-3 h-[40px]">
         <Image height={28} src={avatars[props.avatarId]} width={28} />
         <div className="flex flex-col">
           <p className="text-small">{props.username}</p>
@@ -29,18 +37,23 @@ export function NewsCard(props: NewsData) {
           </p>
         </div>
       </CardHeader>
-      <CardBody>
-        <p className="mb-2">{props.content}</p>
+      <CardBody className="flex flex-1 flex-col">
+        <p className="flex-shrink-0 mb-2 text-sm line-clamp-3">
+          {props.content}
+        </p>
         {props.pictures[0] && (
-          <Image
-            width={220}
-            height={110}
-            src={props.pictures[0]}
-            className="object-contain"
-          />
+          <div className="flex-1 overflow-hidden">
+            <Image
+              src={props.pictures[0]}
+              className="object-cover h-full aspect-[16/9]"
+              classNames={{
+                wrapper: "h-full",
+              }}
+            />
+          </div>
         )}
       </CardBody>
-      <Divider />
+      {!props.isLast && <Divider />}
     </RawCard>
   );
-}
+});

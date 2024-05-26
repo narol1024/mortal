@@ -39,7 +39,8 @@
     "radash": "^12.1.0",
     "react": "^18",
     "react-dom": "^18",
-    "react-spring": "^9.7.3"
+    "react-spring": "^9.7.3",
+    "react-virtuoso": "^4.7.11"
   },
   "devDependencies": {
     "@release-it/conventional-changelog": "^5.0.0",
