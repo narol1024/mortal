@@ -38,12 +38,17 @@ export async function uploadFileOnAliCloudOSS(file: File): Promise<{
       bucket: "mortal-app",
       region: "oss-cn-beijing",
     });
-
-    const fileName = `${getRandomString(6)}_${new Date().getTime()}`;
+    const fileType = file.type;
+    if (!fileType.includes("image/")) {
+      return Promise.reject(new Error("File is not a image type"));
+    }
+    const fileName = `${getRandomString(6)}_${new Date().getTime()}.${fileType
+      .split("/")
+      .pop()}`;
     const result = await client.put(`pictures/${fileName}`, file);
     if (result.res.status === 200) {
       return Promise.resolve({
-        url: result.url,
+        url: result.url.replace("http", "https"),
       });
     }
     return Promise.reject(new Error("Failed to upload file"));
