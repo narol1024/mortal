@@ -71,7 +71,7 @@ export const News = observer(() => {
                 <Spinner />
               </ModalBody>
             ) : (
-              <ModalBody className="block overflow-auto min-h-72 py-4 max-h-[80vh]">
+              <ModalBody className="block overflow-auto min-h-72 py-4 px-0 max-h-[80vh]">
                 <Virtuoso
                   style={{ height: "560px" }}
                   totalCount={newsList.length}
