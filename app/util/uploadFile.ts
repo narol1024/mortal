@@ -48,7 +48,7 @@ export async function uploadFileOnAliCloudOSS(file: File): Promise<{
     const result = await client.put(`pictures/${fileName}`, file);
     if (result.res.status === 200) {
       return Promise.resolve({
-        url: result.url.replace("http", "https"),
+        url: result.url.replace("http://", "https://"),
       });
     }
     return Promise.reject(new Error("Failed to upload file"));

@@ -1,20 +1,38 @@
 "use client";
 
 import React from "react";
-import { Button, Image, Link } from "@nextui-org/react";
+import {
+  Button,
+  Image,
+  Link,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownSection,
+  DropdownItem,
+} from "@nextui-org/react";
 import { Cobe } from "./Cobe";
 import { News } from "./News";
 import { Post } from "./Post";
 import { Location } from "./Location";
 import { Register } from "./Register";
 import { Login } from "./Login";
+import { Works } from "./Works";
 import avatar from "@/assets/logo.png";
 import { useStores } from "@/hooks/useStores";
 import { observer } from "mobx-react-lite";
-import { List as ListIcon } from "lucide-react";
+import {
+  List as ListIcon,
+  KeyRound as KeyRoundIcon,
+  Aperture as ApertureIcon,
+  LogOut as LogOutIcon,
+} from "lucide-react";
+import { useSecretKeyModal } from "@/hooks/useSecretKey";
 
 const HomePage = observer(() => {
-  const { user, news } = useStores();
+  const { user, news, profile } = useStores();
+  const { showSecretKeyModal } = useSecretKeyModal();
+
   const userInfo = user.userInfo;
   const isLogined = !!userInfo.id;
   return (
@@ -35,10 +53,11 @@ const HomePage = observer(() => {
         <Register />
         <Login />
         <Post />
-        <News />
+        {profile.worksListModalVisible && <Works />}
+        {news.newListModalVisible && <News />}
         <Location />
         {!isLogined && (
-          <div className="flex justify-center gap-10">
+          <div className="flex justify-center gap-8">
             <Button
               color="success"
               size="lg"
@@ -64,8 +83,9 @@ const HomePage = observer(() => {
         {isLogined && (
           <div className="flex justify-center flex-col gap-4">
             <p className="w-full text-center">{userInfo.username}，你好</p>
-            <div className="flex justify-center">
+            <div className="flex justify-center gap-8">
               <Button
+                color="success"
                 size="lg"
                 variant="ghost"
                 onClick={() => {
@@ -74,6 +94,53 @@ const HomePage = observer(() => {
               >
                 去分享
               </Button>
+              <Dropdown showArrow>
+                <DropdownTrigger>
+                  <Button size="lg" variant="ghost">
+                    个人中心
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  variant="faded"
+                  aria-label="Dropdown menu with description"
+                >
+                  <DropdownSection showDivider>
+                    <DropdownItem
+                      key="key"
+                      startContent={<KeyRoundIcon width={22} height={22} />}
+                      onClick={() => {
+                        showSecretKeyModal({
+                          publickKey: user.userInfo.secretKey!,
+                        });
+                      }}
+                    >
+                      个人秘钥
+                    </DropdownItem>
+                    <DropdownItem
+                      key="works"
+                      startContent={<ApertureIcon width={22} height={22} />}
+                      onClick={() => {
+                        profile.showWorksListModal();
+                      }}
+                    >
+                      作品管理
+                    </DropdownItem>
+                  </DropdownSection>
+                  <DropdownSection>
+                    <DropdownItem
+                      key="works"
+                      className="text-danger"
+                      color="danger"
+                      startContent={<LogOutIcon width={22} height={22} />}
+                      onClick={() => {
+                        user.logout();
+                      }}
+                    >
+                      退出登录
+                    </DropdownItem>
+                  </DropdownSection>
+                </DropdownMenu>
+              </Dropdown>
             </div>
           </div>
         )}

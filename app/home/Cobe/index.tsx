@@ -44,14 +44,6 @@ export const Cobe = observer(() => {
         canvasRef.current && (width = canvasRef.current.offsetWidth);
       window.addEventListener("resize", onResize);
       onResize();
-      console.log(
-        newsList.map((newsItem) => {
-          return {
-            location: [newsItem.longitude, newsItem.latitude],
-            size: 0.1,
-          };
-        })
-      );
       const globe = createGlobe(canvasRef.current, {
         devicePixelRatio: 2,
         width: width * 2,

@@ -16,7 +16,7 @@ import { ImageUp as ImageUpIcon } from "lucide-react";
 import { Trash2 as TrashIcon } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useModal } from "@ebay/nice-modal-react";
-import Message from "../Message";
+import Message from "@/components/Message";
 import { useStores } from "@/hooks/useStores";
 import { commonColors } from "@nextui-org/theme";
 

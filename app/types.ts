@@ -22,6 +22,15 @@ export interface NewsData {
   latitude: number;
 }
 
+export interface WorksData {
+  id: string;
+  content: string;
+  pictures: string[];
+  createdTime: number;
+  longitude: number;
+  latitude: number;
+}
+
 export interface DraftData {
   content: string;
   photoUrls: { uploaded: boolean; src: string; file: File | null }[];
