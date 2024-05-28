@@ -23,6 +23,12 @@ interface NewsCardProps extends NewsData {
 
 export const NewsCard = React.memo(function NewsCard(props: NewsCardProps) {
   const hasPicture = props.pictures.length > 0;
+  let aspectRatio = 0;
+  try {
+    aspectRatio = props.pictureWidth / props.pictureHeight;
+  } catch (error) {
+    aspectRatio = 1;
+  }
   return (
     <RawCard
       shadow="none"
@@ -45,9 +51,12 @@ export const NewsCard = React.memo(function NewsCard(props: NewsCardProps) {
           <div className="flex-1 overflow-hidden">
             <Image
               src={props.pictures[0]}
-              className="object-cover h-full aspect-[16/9]"
+              className="object-cover h-full"
               classNames={{
                 wrapper: "h-full",
+              }}
+              style={{
+                aspectRatio,
               }}
             />
           </div>

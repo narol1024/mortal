@@ -15,9 +15,20 @@ export async function GET(request: Request) {
     const offset = pageNum * pageSize;
 
     const { rows } = await sql`
-      SELECT users.username, news.id, users."avatarId", news.content, news.pictures, news."createdTime" AT TIME ZONE 'UTC' AS "createdTime", news.longitude, news.latitude
+      SELECT 
+        users.username,
+        news.id,
+        users."avatarId",
+        news.content,
+        news.pictures,
+        news."createdTime" AT TIME ZONE 'UTC' AS "createdTime",
+        news.longitude,
+        news.latitude,
+        news."pictureWidth",
+        news."pictureHeight"
       FROM news 
       JOIN users ON News."ownerId" = users.Id
+      WHERE news.status = 1
       ORDER BY news."createdTime" DESC
       LIMIT ${pageSize}
       OFFSET ${offset}

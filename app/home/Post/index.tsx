@@ -16,7 +16,7 @@ import { ImageUp as ImageUpIcon } from "lucide-react";
 import { Trash2 as TrashIcon } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useModal } from "@ebay/nice-modal-react";
-import Message from "../Message";
+import Message from "@/components/Message";
 import { useStores } from "@/hooks/useStores";
 import { commonColors } from "@nextui-org/theme";
 
@@ -29,15 +29,16 @@ export const PhotoUploader = observer(() => {
     return (
       <div className="relative rounded-lg overflow-hidden">
         <Image
-          width={210}
-          height={110}
+          width={110}
+          height={60}
           // 多图支持
           src={currentPhoto.src}
           radius="none"
-          className="object-contain z-0"
+          className="object-cover z-0"
         />
-        <div
-          className="flex justify-end absolute z-10 bottom-0 right-0 bg-gradient-to-t from-black w-full px-2 py-2 cursor-pointer"
+        <Button
+          variant="light"
+          className="flex justify-end absolute z-10 bottom-0 right-0 bg-gradient-to-t from-black w-full px-2 py-2 cursor-pointer rounded-none"
           onClick={() => {
             news.updateDraft({
               photoUrls: [],
@@ -45,7 +46,7 @@ export const PhotoUploader = observer(() => {
           }}
         >
           <TrashIcon width={20} height={20} color={commonColors.red[500]} />
-        </div>
+        </Button>
       </div>
     );
   }
@@ -80,7 +81,7 @@ export const PhotoUploader = observer(() => {
         variant="ghost"
         color="default"
         startContent={<ImageUpIcon width={20} height={20} />}
-        onClick={() => {
+        onPress={() => {
           hiddenFileInput.current?.click();
         }}
       >

@@ -4,8 +4,8 @@ import { makePersistable } from "mobx-persist-store";
 
 export class UserStore {
   userInfo: Partial<UserInfo> = {};
-  showRegisterModal = false;
-  showLoginModal = false;
+  registerModalVisible = false;
+  loginModalVisible = false;
   constructor() {
     makeAutoObservable(this);
     if (global?.window !== undefined) {
@@ -19,16 +19,19 @@ export class UserStore {
   updateUserInfo = (user: UserInfo) => {
     this.userInfo = user;
   };
+  logout = () => {
+    this.userInfo = {};
+  };
   showRegister = () => {
-    this.showRegisterModal = true;
+    this.registerModalVisible = true;
   };
   hideRegister = () => {
-    this.showRegisterModal = false;
+    this.registerModalVisible = false;
   };
   showLogin = () => {
-    this.showLoginModal = true;
+    this.loginModalVisible = true;
   };
   hideLogin = () => {
-    this.showLoginModal = false;
+    this.loginModalVisible = false;
   };
 }

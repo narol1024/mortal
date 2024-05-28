@@ -13,44 +13,46 @@ import { observer } from "mobx-react-lite";
 import { useStores } from "@/hooks/useStores";
 import { NewsCard } from "../NewsCard";
 import { Virtuoso } from "react-virtuoso";
+import { EmptyTip } from "@/components/EmptyTip";
+
+let abortController: AbortController;
 
 export const News = observer(() => {
   const { news } = useStores();
   const [pageNum, setPageNum] = useState(0);
-  const hasLoadedFirstPageDataRef = useRef(false);
   const newsList = news.newsList;
+  const hasNewsList = newsList.length > 0;
+  const [showLoading, setShowLoading] = useState(false);
 
-  const loadMore = useCallback(() => {
-    (async () => {
-      try {
-        const res = await fetch(`/api/news?pageNum=${pageNum}&pageSize=10`, {
-          cache: "no-store",
-          method: "GET",
-        });
-        const { result } = await res.json();
-        if (result && result.length) {
-          news.updateNewsList(result);
-        }
-      } catch (error) {}
-    })();
-  }, [pageNum]);
+  const loadMore = useCallback(async () => {
+    try {
+      abortController = new AbortController();
+      const res = await fetch(`/api/news?pageNum=${pageNum}&pageSize=2`, {
+        cache: "no-store",
+        method: "GET",
+        signal: abortController.signal,
+      });
+      const { result } = await res.json();
+      if (result && result.length) {
+        news.addNewsList(result);
+      }
+      setShowLoading(false);
+    } catch (error) {
+      // TODO: handle this error
+    }
+  }, [pageNum, news]);
 
   useEffect(() => {
-    if (pageNum === 0) {
-      // 默认reactStrictMode为true，React会执行两次，这里用ref处理一下首页数据
-      if (hasLoadedFirstPageDataRef.current === false) {
-        loadMore();
-        hasLoadedFirstPageDataRef.current = true;
-      }
-    } else {
-      loadMore();
-    }
+    setShowLoading(true);
+    loadMore();
+    return () => {
+      abortController.abort();
+    };
   }, [pageNum]);
-
   return (
     <Modal
       placement="bottom"
-      isOpen={news.showNewList}
+      isOpen={news.newListModalVisible}
       onOpenChange={(isOpen) => {
         if (isOpen) {
           news.showNewListModal();
@@ -58,7 +60,7 @@ export const News = observer(() => {
           news.hideNewListModal();
         }
       }}
-      className="min-w-[60%]"
+      className="max-w-[560px]"
     >
       <ModalContent>
         {() => (
@@ -66,17 +68,19 @@ export const News = observer(() => {
             <ModalHeader className="flex flex-col gap-1">
               带着Mortal看世界
             </ModalHeader>
-            {newsList.length === 0 ? (
+            {!hasNewsList && (
               <ModalBody className="min-h-64 py-4">
-                <Spinner />
+                {showLoading ? <Spinner /> : <EmptyTip />}
               </ModalBody>
-            ) : (
-              <ModalBody className="block overflow-auto min-h-72 py-4 px-0 max-h-[80vh]">
+            )}
+            {hasNewsList && (
+              <ModalBody className="block overflow-auto py-4 px-0 max-h-[460px]">
                 <Virtuoso
-                  style={{ height: "560px" }}
+                  style={{ height: "460px" }}
                   totalCount={newsList.length}
                   endReached={() => {
                     setPageNum(pageNum + 1);
+                    setShowLoading(true);
                   }}
                   itemContent={(index) => {
                     const newsItem = newsList[index];

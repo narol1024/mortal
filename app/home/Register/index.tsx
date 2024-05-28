@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   ModalContent,
@@ -12,60 +12,40 @@ import {
   Avatar,
   Textarea,
 } from "@nextui-org/react";
-import { useCopyToClipboard } from "@uidotdev/usehooks";
 import { getRandomString } from "@/util/randomString";
 import { getRangeNumber } from "@/util/rangeNumber";
 import { useModal } from "@ebay/nice-modal-react";
-import Message from "../Message";
-import { Info as InfoIcon } from "lucide-react";
+import Message from "@/components/Message";
 import { observer } from "mobx-react-lite";
 import { useStores } from "@/hooks/useStores";
+import { useSecretKeyModal } from "@/hooks/useSecretKey";
 
 import { avatars } from "@/constants";
 
-const _defaultUsername = "Mortal_" + getRandomString();
+function getRandomUsername() {
+  return "Mortal_" + getRandomString();
+}
+
+function getRandomAvatarId() {
+  return getRangeNumber(0, 5);
+}
 
 export const Register = observer(() => {
   const messageModal = useModal(Message);
-  const messageModal2 = useModal(Message);
   const [isRegisterLoading, setIsRegisterLoading] = useState(false);
-  const [avatarId, setAvatarId] = useState(getRangeNumber(0, 5));
-  const [username, setUsername] = useState<string>(_defaultUsername);
-  const [_, copyToClipboard] = useCopyToClipboard();
-
+  const [avatarId, setAvatarId] = useState(-1);
+  const [username, setUsername] = useState("");
+  const { showSecretKeyModal } = useSecretKeyModal();
   const { user } = useStores();
 
-  const onRegisterSuccess = useCallback((publickKey: string) => {
-    messageModal.show({
-      title: "提示",
-      content: (
-        <>
-          <Textarea defaultValue={publickKey} className="max-w-xs" />
-          <div className="flex flex-row gap-1">
-            <InfoIcon width={16} height={16} color="orange" />
-            <p className="text-xs">请保存好密钥到本地，以便下次再次登录。</p>
-          </div>
-        </>
-      ),
-      showCancelButton: true,
-      cancelText: "关闭",
-      okText: "复制",
-      onOk: async () => {
-        copyToClipboard(publickKey);
-        setTimeout(() => {
-          messageModal2.show({
-            type: "success",
-            title: "注册成功",
-            content: "请保存好你的密钥到本地，以便下次再次登录。",
-          });
-        }, 500);
-        return Promise.resolve();
-      },
-    });
-  }, []);
+  useEffect(() => {
+    setUsername(getRandomUsername());
+    setAvatarId(getRandomAvatarId());
+  }, [user.registerModalVisible]);
+
   return (
     <Modal
-      isOpen={user.showRegisterModal}
+      isOpen={user.registerModalVisible}
       size="lg"
       placement={"bottom"}
       onOpenChange={(isOpen) => {
@@ -86,7 +66,7 @@ export const Register = observer(() => {
               <>
                 <Avatar
                   className="w-40 h-40 text-large"
-                  src={avatars[avatarId]}
+                  src={avatars[avatarId] || ""}
                 />
                 <Input
                   size="lg"
@@ -99,8 +79,9 @@ export const Register = observer(() => {
                     <Button
                       variant="light"
                       color="default"
-                      onClick={() => {
-                        setUsername("Mortal_" + getRandomString());
+                      onPress={() => {
+                        setUsername(getRandomUsername());
+                        setAvatarId(getRandomAvatarId());
                       }}
                     >
                       随机生成
@@ -127,7 +108,10 @@ export const Register = observer(() => {
                     if (result.id) {
                       onClose();
                       user.updateUserInfo(result);
-                      onRegisterSuccess(result.secretKey);
+                      showSecretKeyModal({
+                        publickKey: result.secretKey,
+                        title: "注册成功",
+                      });
                     } else {
                       messageModal.show({
                         type: "failure",

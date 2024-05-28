@@ -1,5 +1,6 @@
 import { DraftData, NewsData } from "@/types";
 import { makeAutoObservable } from "mobx";
+import { unique } from "radash";
 
 const draftData = {
   content: "",
@@ -10,12 +11,12 @@ export class NewsStore {
   isPosting = false;
   draft: DraftData = draftData;
   newsList: NewsData[] = [];
-  showNewList = false;
+  newListModalVisible = false;
   constructor() {
     makeAutoObservable(this);
   }
-  updateNewsList = (list: NewsData[]) => {
-    this.newsList = this.newsList.concat(list);
+  addNewsList = (list: NewsData[]) => {
+    this.newsList.push(...list);
   };
   updateDraft = (draft: Partial<DraftData>) => {
     this.draft = {
@@ -33,9 +34,9 @@ export class NewsStore {
     this.isPosting = false;
   };
   showNewListModal = () => {
-    this.showNewList = true;
+    this.newListModalVisible = true;
   };
   hideNewListModal = () => {
-    this.showNewList = false;
+    this.newListModalVisible = false;
   };
 }

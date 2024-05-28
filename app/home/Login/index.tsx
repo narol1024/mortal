@@ -14,7 +14,7 @@ import {
 import { useStores } from "@/hooks/useStores";
 import { observer } from "mobx-react-lite";
 import { useModal } from "@ebay/nice-modal-react";
-import Message from "../Message";
+import Message from "@/components/Message";
 
 export const Login = observer(() => {
   const messageModal = useModal(Message);
@@ -23,9 +23,9 @@ export const Login = observer(() => {
   const { user } = useStores();
   return (
     <Modal
-      isOpen={user.showLoginModal}
+      isOpen={user.loginModalVisible}
       size="lg"
-      placement={"bottom"}
+      placement="bottom"
       onOpenChange={(isOpen) => {
         if (isOpen) {
           user.showLogin();
@@ -63,6 +63,10 @@ export const Login = observer(() => {
                     const { result } = await res.json();
                     if (result.id) {
                       user.updateUserInfo(result);
+                      messageModal.show({
+                        type: "success",
+                        content: "登录成功",
+                      });
                       onClose();
                     } else {
                       messageModal.show({
