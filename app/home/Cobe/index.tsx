@@ -126,7 +126,7 @@ export const Cobe = observer(() => {
       style={{
         aspectRatio: 1,
       }}
-      className="relative max-w-[35vmax] m-auto"
+      className="relative max-w-[60vh] m-auto"
     >
       <canvas
         ref={canvasRef}
