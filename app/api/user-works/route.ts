@@ -25,7 +25,7 @@ export async function GET(request: Request) {
         SELECT users.username, news.id, users."avatarId", news.content, news.pictures, news."createdTime" AT TIME ZONE 'UTC' AS "createdTime", news.longitude, news.latitude
         FROM news 
         JOIN users ON News."ownerId" = users.Id
-        WHERE news."ownerId" = ${users[0].id}
+        WHERE news."ownerId" = ${users[0].id} AND news.status = 1
         ORDER BY news."createdTime" DESC
         LIMIT ${pageSize}
         OFFSET ${offset}

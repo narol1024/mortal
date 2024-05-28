@@ -7,8 +7,11 @@ export class ProfileStore {
   constructor() {
     makeAutoObservable(this);
   }
-  updateWorksList = (list: WorksData[]) => {
-    this.worksList = this.worksList.concat(list);
+  addWorksList = (list: WorksData[]) => {
+    this.worksList.push(...list);
+  };
+  deleteWorks = (id: number) => {
+    this.worksList = this.worksList.filter((work) => work.id !== id);
   };
   showWorksListModal = () => {
     this.worksListModalVisible = true;

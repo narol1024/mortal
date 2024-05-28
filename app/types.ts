@@ -12,7 +12,7 @@ export interface UserInfo {
 }
 
 export interface NewsData {
-  id: string;
+  id: number;
   username: string;
   avatarId: number;
   content: string;
@@ -20,10 +20,12 @@ export interface NewsData {
   createdTime: number;
   longitude: number;
   latitude: number;
+  pictureWidth: number;
+  pictureHeight: number;
 }
 
 export interface WorksData {
-  id: string;
+  id: number;
   content: string;
   pictures: string[];
   createdTime: number;

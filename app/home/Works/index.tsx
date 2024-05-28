@@ -12,46 +12,51 @@ import { observer } from "mobx-react-lite";
 import { useStores } from "@/hooks/useStores";
 import { WorksCard } from "../WorksCard";
 import { Virtuoso } from "react-virtuoso";
-import { cluster } from "radash";
+import { useModal } from "@ebay/nice-modal-react";
+import Message from "@/components/Message";
+import { EmptyTip } from "@/components/EmptyTip";
+
+let abortController: AbortController;
 
 export const Works = observer(() => {
+  const messageModal = useModal(Message);
   const { user, profile } = useStores();
   const [pageNum, setPageNum] = useState(0);
-  const hasLoadedFirstPageDataRef = useRef(false);
   const worksList = profile.worksList;
-  const worksGroupList = cluster(worksList, 2);
+  const hasWorksList = worksList.length > 0;
+  const [showLoading, setShowLoading] = useState(false);
 
-  const loadMore = useCallback(() => {
-    (async () => {
-      try {
-        const res = await fetch(
-          `/api/my-works?secretKey=${user.userInfo.secretKey}&pageNum=${pageNum}&pageSize=10`,
-          {
-            cache: "no-store",
-            method: "GET",
-          }
-        );
-        const { result } = await res.json();
-        if (result && result.length) {
-          profile.updateWorksList(result);
-        }
-      } catch (error) {
-        // TODO: handle this error
+  const loadMore = useCallback(async () => {
+    try {
+      if (showLoading) {
+        return;
       }
-    })();
-  }, [user, profile, pageNum]);
+      abortController = new AbortController();
+      const res = await fetch(
+        `/api/user-works?secretKey=${user.userInfo.secretKey}&pageNum=${pageNum}&pageSize=10`,
+        {
+          cache: "no-store",
+          method: "GET",
+          signal: abortController.signal,
+        }
+      );
+      const { result } = await res.json();
+      if (result && result.length) {
+        profile.addWorksList(result);
+      }
+      setShowLoading(false);
+    } catch (error) {
+      // TODO: handle this error
+    }
+  }, [user, profile, pageNum, showLoading]);
 
   useEffect(() => {
-    if (pageNum === 0) {
-      // 默认reactStrictMode为true，React会执行两次，这里用ref处理一下首页数据
-      if (hasLoadedFirstPageDataRef.current === false) {
-        loadMore();
-        hasLoadedFirstPageDataRef.current = true;
-      }
-    } else {
-      loadMore();
-    }
-  }, [pageNum]);
+    setShowLoading(true);
+    loadMore();
+    return () => {
+      abortController.abort();
+    };
+  }, []);
 
   return (
     <Modal
@@ -64,7 +69,7 @@ export const Works = observer(() => {
           profile.hideWorksListModal();
         }
       }}
-      className="max-w-[560px]"
+      className="max-w-[520px]"
     >
       <ModalContent>
         {() => (
@@ -72,28 +77,56 @@ export const Works = observer(() => {
             <ModalHeader className="flex flex-col gap-1">
               我的作品管理
             </ModalHeader>
-            {worksGroupList.length === 0 ? (
+            {!hasWorksList && (
               <ModalBody className="min-h-64 py-4">
-                <Spinner />
+                {showLoading ? <Spinner /> : <EmptyTip />}
               </ModalBody>
-            ) : (
-              <ModalBody className="block overflow-auto min-h-72 px-4 max-h-[80vh]">
+            )}
+            {hasWorksList && (
+              <ModalBody className="block overflow-auto py-4 px-0 h-[460px]">
                 <Virtuoso
-                  style={{ height: "560px" }}
-                  totalCount={worksGroupList.length}
+                  style={{ height: "460px" }}
+                  totalCount={worksList.length}
                   endReached={() => {
+                    setShowLoading(true);
                     setPageNum(pageNum + 1);
                   }}
                   itemContent={(index) => {
-                    const worksGroupItem = worksGroupList[index];
+                    const worksItem = worksList[index];
                     return (
-                      <div className="gap-2 grid grid-cols-2 mb-2">
-                        {worksGroupItem.map((worksItem) => {
-                          return (
-                            <WorksCard key={worksItem.id} {...worksItem} />
-                          );
-                        })}
-                      </div>
+                      <WorksCard
+                        key={worksItem.id}
+                        isLast={index === worksList.length - 1}
+                        onRemove={() => {
+                          messageModal.show({
+                            title: "确定要删除该作品吗？",
+                            showCancelButton: true,
+                            confirmText: "确定",
+                            confirmColor: "danger",
+                            cancelColor: "default",
+                            onConfirm: async () => {
+                              try {
+                                const res = await fetch("/api/delete-works", {
+                                  method: "POST",
+                                  body: JSON.stringify({
+                                    secretKey: user.userInfo.secretKey,
+                                    id: worksItem.id,
+                                  }),
+                                });
+                                const { result } = await res.json();
+                                if (result) {
+                                  profile.deleteWorks(worksItem.id);
+                                } else {
+                                  console.log("删除失败");
+                                }
+                              } catch (error) {
+                                console.log("删除失败");
+                              }
+                            },
+                          });
+                        }}
+                        {...worksItem}
+                      />
                     );
                   }}
                 />

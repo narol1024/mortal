@@ -1,5 +1,6 @@
 import { DraftData, NewsData } from "@/types";
 import { makeAutoObservable } from "mobx";
+import { unique } from "radash";
 
 const draftData = {
   content: "",
@@ -14,8 +15,8 @@ export class NewsStore {
   constructor() {
     makeAutoObservable(this);
   }
-  updateNewsList = (list: NewsData[]) => {
-    this.newsList = this.newsList.concat(list);
+  addNewsList = (list: NewsData[]) => {
+    this.newsList.push(...list);
   };
   updateDraft = (draft: Partial<DraftData>) => {
     this.draft = {

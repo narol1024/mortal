@@ -37,8 +37,8 @@ export function useSecretKeyModal() {
         ),
         showCancelButton: true,
         cancelText: "关闭",
-        okText: "复制",
-        onOk: async () => {
+        confirmText: "复制",
+        onConfirm: async () => {
           copyToClipboard(publickKey);
           setTimeout(() => {
             messageModal2.show({

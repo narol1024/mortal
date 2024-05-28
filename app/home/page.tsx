@@ -38,31 +38,32 @@ const HomePage = observer(() => {
   return (
     <>
       <div className="relative w-full">
+        <Cobe />
+        <Register />
+        <Login />
+        <Post />
+        <News />
+        <Works />
+        <Location />
         <Button
           isIconOnly
           variant="light"
-          aria-label="Explore"
           className="absolute z-10 top-0 left-0"
+          // FIXME: why using asolute, the onPress can not work.
+          // workaround: using onCick instead of onPress
           onClick={() => {
             news.showNewListModal();
           }}
         >
           <ListIcon width={32} height={32} />
         </Button>
-        <Cobe />
-        <Register />
-        <Login />
-        <Post />
-        {profile.worksListModalVisible && <Works />}
-        {news.newListModalVisible && <News />}
-        <Location />
         {!isLogined && (
           <div className="flex justify-center gap-8">
             <Button
               color="success"
               size="lg"
               variant="ghost"
-              onClick={() => {
+              onPress={() => {
                 user.showRegister();
               }}
             >
@@ -72,7 +73,7 @@ const HomePage = observer(() => {
               color="warning"
               size="lg"
               variant="ghost"
-              onClick={() => {
+              onPress={() => {
                 user.showLogin();
               }}
             >
@@ -88,7 +89,7 @@ const HomePage = observer(() => {
                 color="success"
                 size="lg"
                 variant="ghost"
-                onClick={() => {
+                onPress={() => {
                   news.showPostingModal();
                 }}
               >
@@ -108,7 +109,7 @@ const HomePage = observer(() => {
                     <DropdownItem
                       key="key"
                       startContent={<KeyRoundIcon width={22} height={22} />}
-                      onClick={() => {
+                      onPress={() => {
                         showSecretKeyModal({
                           publickKey: user.userInfo.secretKey!,
                         });
@@ -119,7 +120,7 @@ const HomePage = observer(() => {
                     <DropdownItem
                       key="works"
                       startContent={<ApertureIcon width={22} height={22} />}
-                      onClick={() => {
+                      onPress={() => {
                         profile.showWorksListModal();
                       }}
                     >
@@ -132,7 +133,7 @@ const HomePage = observer(() => {
                       className="text-danger"
                       color="danger"
                       startContent={<LogOutIcon width={22} height={22} />}
-                      onClick={() => {
+                      onPress={() => {
                         user.logout();
                       }}
                     >

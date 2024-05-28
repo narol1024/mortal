@@ -79,7 +79,7 @@ export const Register = observer(() => {
                     <Button
                       variant="light"
                       color="default"
-                      onClick={() => {
+                      onPress={() => {
                         setUsername(getRandomUsername());
                         setAvatarId(getRandomAvatarId());
                       }}

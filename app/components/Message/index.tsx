@@ -14,19 +14,32 @@ import { Check as CheckIcon } from "lucide-react";
 import { X as XIcon } from "lucide-react";
 import { isString } from "radash";
 import { commonColors } from "@nextui-org/theme";
+import { noop } from "@/util/noop";
 
 interface MessageProps {
   title?: string;
   type: "default" | "success" | "failure";
   content?: string | React.ReactNode;
   cancelText?: string;
-  okText?: string;
+  confirmText?: string;
+  confirmColor?:
+    | "default"
+    | "success"
+    | "primary"
+    | "danger"
+    | "secondary"
+    | "warning";
+  cancelColor?:
+    | "default"
+    | "success"
+    | "primary"
+    | "danger"
+    | "secondary"
+    | "warning";
   onCancel?: (e?: any) => void | Promise<void>;
-  onOk?: (e?: any) => void | Promise<void>;
+  onConfirm?: (e?: any) => void | Promise<void>;
   showCancelButton?: boolean;
 }
-
-function noop() {}
 
 export default NiceModal.create((props: MessageProps) => {
   const modal = useModal();
@@ -35,10 +48,12 @@ export default NiceModal.create((props: MessageProps) => {
     content,
     type = "default",
     cancelText = "取消",
-    okText = "好的",
+    confirmText = "好的",
+    confirmColor = "primary",
+    cancelColor = "danger",
     showCancelButton = false,
     onCancel = noop,
-    onOk = noop,
+    onConfirm = noop,
   } = props;
   return (
     <Modal
@@ -75,7 +90,7 @@ export default NiceModal.create((props: MessageProps) => {
                       color={commonColors.red[500]}
                     />
                   )}
-                  <p>{content}</p>
+                  <p className="text-base">{content}</p>
                 </div>
               ) : (
                 content
@@ -84,7 +99,7 @@ export default NiceModal.create((props: MessageProps) => {
             <ModalFooter>
               {showCancelButton && (
                 <Button
-                  color="danger"
+                  color={cancelColor}
                   variant="light"
                   onPress={async () => {
                     await onCancel();
@@ -95,13 +110,13 @@ export default NiceModal.create((props: MessageProps) => {
                 </Button>
               )}
               <Button
-                color="primary"
+                color={confirmColor}
                 onPress={async () => {
-                  await onOk();
+                  await onConfirm();
                   _onClose();
                 }}
               >
-                {okText}
+                {confirmText}
               </Button>
             </ModalFooter>
           </>
