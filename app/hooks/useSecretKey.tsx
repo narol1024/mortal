@@ -30,7 +30,7 @@ export function useSecretKeyModal() {
           <>
             <Textarea defaultValue={publickKey} className="max-w-xs" />
             <div className="flex flex-row gap-1">
-              <InfoIcon width={16} height={16} color="orange" />
+              <InfoIcon size={16} color="orange" />
               <p className="text-xs">请保存好密钥到本地，以便下次再次登录。</p>
             </div>
           </>

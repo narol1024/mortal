@@ -16,7 +16,7 @@ export interface NewsData {
   username: string;
   avatarId: number;
   content: string;
-  pictures: string[];
+  picture: string;
   createdTime: number;
   longitude: number;
   latitude: number;
@@ -27,13 +27,21 @@ export interface NewsData {
 export interface WorksData {
   id: number;
   content: string;
-  pictures: string[];
+  picture: string;
   createdTime: number;
   longitude: number;
   latitude: number;
 }
 
+export interface PictureMeta {
+  url: string;
+  file: File | null;
+  uploaded: boolean;
+  width: number;
+  height: number;
+}
+
 export interface DraftData {
   content: string;
-  photoUrls: { uploaded: boolean; src: string; file: File | null }[];
+  picture: PictureMeta;
 }

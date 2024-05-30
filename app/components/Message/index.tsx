@@ -75,20 +75,12 @@ export default NiceModal.create((props: MessageProps) => {
             <ModalHeader className="flex flex-col gap-1">{title}</ModalHeader>
             <ModalBody>
               {isString(content) ? (
-                <div className="flex flex-row items-center gap-2">
+                <div className="flex flex-row items-start gap-2">
                   {type === "success" && (
-                    <CheckIcon
-                      width={28}
-                      height={28}
-                      color={commonColors.green[500]}
-                    />
+                    <CheckIcon size={26} color={commonColors.green[500]} />
                   )}
                   {type === "failure" && (
-                    <XIcon
-                      width={28}
-                      height={28}
-                      color={commonColors.red[500]}
-                    />
+                    <XIcon size={26} color={commonColors.red[500]} />
                   )}
                   <p className="text-base">{content}</p>
                 </div>

@@ -19,20 +19,21 @@ import { useModal } from "@ebay/nice-modal-react";
 import Message from "@/components/Message";
 import { useStores } from "@/hooks/useStores";
 import { commonColors } from "@nextui-org/theme";
+import { PictureMeta } from "@/types";
 
-export const PhotoUploader = observer(() => {
+export const PictureUploader = observer(() => {
   const { news } = useStores();
   const hiddenFileInput = useRef<HTMLInputElement>(null);
-  const hasPhotos = news.draft.photoUrls.length > 0;
-  if (hasPhotos) {
-    const currentPhoto = news.draft.photoUrls[0];
+  const hasPic = news.draft.picture.url;
+  if (hasPic) {
+    const currentPic = news.draft.picture;
     return (
       <div className="relative rounded-lg overflow-hidden">
         <Image
           width={110}
           height={60}
           // 多图支持
-          src={currentPhoto.src}
+          src={currentPic.url}
           radius="none"
           className="object-cover z-0"
         />
@@ -41,11 +42,17 @@ export const PhotoUploader = observer(() => {
           className="flex justify-end absolute z-10 bottom-0 right-0 bg-gradient-to-t from-black w-full px-2 py-2 cursor-pointer rounded-none"
           onClick={() => {
             news.updateDraft({
-              photoUrls: [],
+              picture: {
+                file: null,
+                uploaded: false,
+                url: "",
+                width: 0,
+                height: 0,
+              },
             });
           }}
         >
-          <TrashIcon width={20} height={20} color={commonColors.red[500]} />
+          <TrashIcon size={20} color={commonColors.red[500]} />
         </Button>
       </div>
     );
@@ -61,15 +68,19 @@ export const PhotoUploader = observer(() => {
             reads.readAsDataURL(file);
             reads.onload = (e) => {
               const base64Url = e.target?.result as string;
-              news.updateDraft({
-                photoUrls: [
-                  {
+              const _image = new window.Image();
+              _image.src = base64Url;
+              _image.onload = () => {
+                news.updateDraft({
+                  picture: {
                     file,
                     uploaded: false,
-                    src: base64Url,
+                    url: base64Url,
+                    width: _image.width,
+                    height: _image.height,
                   },
-                ],
-              });
+                });
+              };
             };
           }
         }}
@@ -80,7 +91,7 @@ export const PhotoUploader = observer(() => {
         size="md"
         variant="ghost"
         color="default"
-        startContent={<ImageUpIcon width={20} height={20} />}
+        startContent={<ImageUpIcon size={20} />}
         onPress={() => {
           hiddenFileInput.current?.click();
         }}
@@ -132,7 +143,7 @@ export const Post = observer(() => {
                   }}
                 />
                 <div className="flex gap-2 justify-between items-center">
-                  <PhotoUploader />
+                  <PictureUploader />
                 </div>
               </ModalBody>
               <ModalFooter>
@@ -146,7 +157,8 @@ export const Post = observer(() => {
                     try {
                       setIsPublishLoading(true);
                       const { content } = draft;
-                      let { photoUrls } = draft;
+                      const { picture } = draft;
+                      let _picture: PictureMeta = picture;
                       if (content.trim() === "") {
                         messageModal.show({
                           type: "failure",
@@ -154,23 +166,26 @@ export const Post = observer(() => {
                         });
                         return;
                       }
-                      // 多图支持
-                      const currentPhoto = photoUrls[0];
+                      // TODO: 多图支持
+                      const currentPic = picture;
                       if (
-                        currentPhoto &&
-                        !currentPhoto.uploaded &&
-                        currentPhoto.file
+                        currentPic &&
+                        !currentPic.uploaded &&
+                        currentPic.file
                       ) {
                         try {
-                          const file = currentPhoto.file;
+                          const file = currentPic.file;
                           const response = await uploadFileOnAliCloudOSS(file);
-                          photoUrls = [
-                            {
-                              file: null,
-                              uploaded: true,
-                              src: response.url,
-                            },
-                          ];
+                          const rawPicture = picture;
+                          _picture = {
+                            ...rawPicture,
+                            uploaded: true,
+                            url: response.url,
+                            file: null,
+                          };
+                          news.updateDraft({
+                            picture: _picture,
+                          });
                         } catch (error) {
                           messageModal.show({
                             type: "failure",
@@ -183,7 +198,9 @@ export const Post = observer(() => {
                         method: "POST",
                         body: JSON.stringify({
                           content: content,
-                          pictures: photoUrls.map((v) => v.src),
+                          picture: _picture.url,
+                          pictureWidth: _picture.width,
+                          pictureHeight: _picture.height,
                           secretKey: userInfo.secretKey,
                           longitude: location.longitude,
                           latitude: location.latitude,

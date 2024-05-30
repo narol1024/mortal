@@ -110,8 +110,9 @@ export const Cobe = observer(() => {
         window.removeEventListener("resize", onResize);
       };
     }
-  }, [newsList]);
-
+    // TODO: 解决渲染抖动问题
+    // }, [newsList]);
+  }, []);
   useEffect(() => {
     if (news.isPosting) {
       const { longitude, latitude } = location;

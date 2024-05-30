@@ -10,7 +10,6 @@ import {
   Button,
   Input,
   Avatar,
-  Textarea,
 } from "@nextui-org/react";
 import { getRandomString } from "@/util/randomString";
 import { getRangeNumber } from "@/util/rangeNumber";
@@ -74,7 +73,6 @@ export const Register = observer(() => {
                   placeholder="Mortal"
                   value={username}
                   onValueChange={setUsername}
-                  isRequired
                   endContent={
                     <Button
                       variant="light"
@@ -98,6 +96,14 @@ export const Register = observer(() => {
                 color="success"
                 isLoading={isRegisterLoading}
                 onPress={async () => {
+                  if (username.trim() === "") {
+                    messageModal.show({
+                      type: "failure",
+                      title: "提示",
+                      content: "请输入用户名",
+                    });
+                    return;
+                  }
                   try {
                     setIsRegisterLoading(true);
                     const res = await fetch("/api/add-user", {
@@ -116,8 +122,7 @@ export const Register = observer(() => {
                       messageModal.show({
                         type: "failure",
                         title: "注册失败",
-                        content:
-                          "看起来注册过程中发生了一点小波折。请仔细检查您的信息是否有误。",
+                        content: "注册出错了，请检查您的信息是否有误。",
                       });
                     }
                   } catch (error) {

@@ -83,7 +83,7 @@ export const Works = observer(() => {
               </ModalBody>
             )}
             {hasWorksList && (
-              <ModalBody className="block overflow-auto py-4 px-0 h-[460px]">
+              <ModalBody className="block overflow-auto py-4 px-0">
                 <Virtuoso
                   style={{ height: "460px" }}
                   totalCount={worksList.length}
@@ -117,10 +117,16 @@ export const Works = observer(() => {
                                 if (result) {
                                   profile.deleteWorks(worksItem.id);
                                 } else {
-                                  console.log("删除失败");
+                                  messageModal.show({
+                                    type: "failure",
+                                    content: "删除失败",
+                                  });
                                 }
                               } catch (error) {
-                                console.log("删除失败");
+                                messageModal.show({
+                                  type: "failure",
+                                  content: "删除失败",
+                                });
                               }
                             },
                           });

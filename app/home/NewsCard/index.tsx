@@ -22,17 +22,25 @@ interface NewsCardProps extends NewsData {
 }
 
 export const NewsCard = React.memo(function NewsCard(props: NewsCardProps) {
-  const hasPicture = props.pictures.length > 0;
   let aspectRatio = 0;
   try {
     aspectRatio = props.pictureWidth / props.pictureHeight;
   } catch (error) {
     aspectRatio = 1;
   }
+
+  const hasPicture = !!props.picture;
+  let height = 280;
+  if (!hasPicture) {
+    height = Math.ceil(props.content.length / 37) * 20 + 80;
+  }
   return (
     <RawCard
       shadow="none"
-      className={`flex flex-col mb-8 ${hasPicture ? "h-[280px]" : "h-[180px]"}`}
+      className="flex flex-col mb-8"
+      style={{
+        height: `${height}px`,
+      }}
     >
       <CardHeader className="flex flex-shrink-0 gap-3 h-[40px]">
         <Image height={28} src={avatars[props.avatarId]} width={28} />
@@ -47,10 +55,10 @@ export const NewsCard = React.memo(function NewsCard(props: NewsCardProps) {
         <p className="flex-shrink-0 mb-2 text-sm line-clamp-3">
           {props.content}
         </p>
-        {props.pictures[0] && (
+        {hasPicture && (
           <div className="flex-1 overflow-hidden">
             <Image
-              src={props.pictures[0]}
+              src={props.picture}
               className="object-cover h-full"
               classNames={{
                 wrapper: "h-full",
