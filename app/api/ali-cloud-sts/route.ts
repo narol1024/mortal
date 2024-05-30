@@ -25,7 +25,7 @@ export async function GET() {
       })
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json({ error }, { status: 400 });
   }
 }

@@ -54,6 +54,13 @@ export const Login = observer(() => {
                 isLoading={isLoginLoading}
                 color="success"
                 onPress={async () => {
+                  if (secretKey.trim() === "") {
+                    messageModal.show({
+                      type: "failure",
+                      content: "请输入个人秘钥",
+                    });
+                    return;
+                  }
                   try {
                     setIsLoginLoading(true);
                     const res = await fetch("/api/login", {

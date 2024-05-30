@@ -27,7 +27,7 @@ export const News = observer(() => {
   const loadMore = useCallback(async () => {
     try {
       abortController = new AbortController();
-      const res = await fetch(`/api/news?pageNum=${pageNum}&pageSize=2`, {
+      const res = await fetch(`/api/news?pageNum=${pageNum}&pageSize=5`, {
         cache: "no-store",
         method: "GET",
         signal: abortController.signal,
@@ -74,7 +74,7 @@ export const News = observer(() => {
               </ModalBody>
             )}
             {hasNewsList && (
-              <ModalBody className="block overflow-auto py-4 px-0 max-h-[460px]">
+              <ModalBody className="block overflow-auto py-4 px-0">
                 <Virtuoso
                   style={{ height: "460px" }}
                   totalCount={newsList.length}

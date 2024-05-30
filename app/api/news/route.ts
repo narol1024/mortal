@@ -20,7 +20,7 @@ export async function GET(request: Request) {
         news.id,
         users."avatarId",
         news.content,
-        news.pictures,
+        news.picture,
         news."createdTime" AT TIME ZONE 'UTC' AS "createdTime",
         news.longitude,
         news.latitude,

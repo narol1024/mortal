@@ -1,10 +1,15 @@
 import { DraftData, NewsData } from "@/types";
 import { makeAutoObservable } from "mobx";
-import { unique } from "radash";
 
-const draftData = {
+const draftData: DraftData = {
   content: "",
-  photoUrls: [],
+  picture: {
+    file: null,
+    url: "",
+    uploaded: false,
+    width: 0,
+    height: 0,
+  },
 };
 
 export class NewsStore {
@@ -16,7 +21,7 @@ export class NewsStore {
     makeAutoObservable(this);
   }
   addNewsList = (list: NewsData[]) => {
-    this.newsList.push(...list);
+    this.newsList = this.newsList.concat(list);
   };
   updateDraft = (draft: Partial<DraftData>) => {
     this.draft = {

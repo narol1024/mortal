@@ -15,6 +15,7 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { Trash2 as TrashIcon } from "lucide-react";
 import { noop } from "@/util/noop";
+import logo from "@/assets/logo.png";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -33,7 +34,7 @@ export const WorksCard = React.memo(function NewsCard(props: WorksCardProps) {
           shadow="sm"
           radius="sm"
           className="object-cover h-[110px] w-[90px]"
-          src={props.pictures[0]}
+          src={props.picture || logo.src}
         />
         <div className="flex flex-col flex-1 justify-between gap-2">
           <div>

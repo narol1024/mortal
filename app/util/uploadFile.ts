@@ -53,7 +53,7 @@ export async function uploadFileOnAliCloudOSS(file: File): Promise<{
     }
     return Promise.reject(new Error("Failed to upload file"));
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return Promise.reject(new Error("Failed to upload file"));
   }
 }

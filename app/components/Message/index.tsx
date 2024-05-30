@@ -77,10 +77,10 @@ export default NiceModal.create((props: MessageProps) => {
               {isString(content) ? (
                 <div className="flex flex-row items-start gap-2">
                   {type === "success" && (
-                    <CheckIcon size={36} color={commonColors.green[500]} />
+                    <CheckIcon size={26} color={commonColors.green[500]} />
                   )}
                   {type === "failure" && (
-                    <XIcon size={36} color={commonColors.red[500]} />
+                    <XIcon size={26} color={commonColors.red[500]} />
                   )}
                   <p className="text-base">{content}</p>
                 </div>
