@@ -45,7 +45,7 @@ export const PhotoUploader = observer(() => {
             });
           }}
         >
-          <TrashIcon width={20} height={20} color={commonColors.red[500]} />
+          <TrashIcon size={20} color={commonColors.red[500]} />
         </Button>
       </div>
     );
@@ -80,7 +80,7 @@ export const PhotoUploader = observer(() => {
         size="md"
         variant="ghost"
         color="default"
-        startContent={<ImageUpIcon width={20} height={20} />}
+        startContent={<ImageUpIcon size={20} />}
         onPress={() => {
           hiddenFileInput.current?.click();
         }}

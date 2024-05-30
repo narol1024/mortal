@@ -53,7 +53,7 @@ export const WorksCard = React.memo(function NewsCard(props: WorksCardProps) {
               onRemove();
             }}
           >
-            <TrashIcon width={20} height={20} color={commonColors.red[500]} />
+            <TrashIcon size={20} color={commonColors.red[500]} />
           </Button>
         </div>
       </CardBody>

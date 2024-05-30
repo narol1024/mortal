@@ -108,7 +108,7 @@ const HomePage = observer(() => {
                   <DropdownSection showDivider>
                     <DropdownItem
                       key="key"
-                      startContent={<KeyRoundIcon width={22} height={22} />}
+                      startContent={<KeyRoundIcon size={22} />}
                       onPress={() => {
                         showSecretKeyModal({
                           publickKey: user.userInfo.secretKey!,
@@ -119,7 +119,7 @@ const HomePage = observer(() => {
                     </DropdownItem>
                     <DropdownItem
                       key="works"
-                      startContent={<ApertureIcon width={22} height={22} />}
+                      startContent={<ApertureIcon size={22} />}
                       onPress={() => {
                         profile.showWorksListModal();
                       }}
@@ -132,7 +132,7 @@ const HomePage = observer(() => {
                       key="works"
                       className="text-danger"
                       color="danger"
-                      startContent={<LogOutIcon width={22} height={22} />}
+                      startContent={<LogOutIcon size={22} />}
                       onPress={() => {
                         user.logout();
                       }}
