@@ -21,16 +21,20 @@ export async function POST(request: Request) {
     const pwd = md5.update(secretKey).digest("hex");
     const { rows } = await sql`SELECT * FROM Users WHERE pwd=${pwd}`;
     if (rows.length === 1) {
-      const res = await geocoder(longitude, latitude);
-      if (res.status === 0) {
-        await sql`INSERT INTO news ("ownerId", content, picture, "pictureWidth", "pictureHeight", longitude, latitude, "locationNation", "locationProvince") VALUES (${rows[0].id}, ${content}, ${picture}, ${pictureWidth}, ${pictureHeight},${longitude}, ${latitude}, ${res.nation}, ${res.province});`;
-        return NextResponse.json({
-          message: "Succeeded to publish",
-          result: {
-            content,
-          },
-        });
+      let res: any = {
+        nation: '',
+        province: ''
+      };
+      if (longitude !== -1 && latitude !== -1) {
+        res = await geocoder(longitude, latitude);
       }
+      await sql`INSERT INTO news ("ownerId", content, picture, "pictureWidth", "pictureHeight", longitude, latitude, "locationNation", "locationProvince") VALUES (${rows[0].id}, ${content}, ${picture}, ${pictureWidth}, ${pictureHeight},${longitude}, ${latitude}, ${res.nation}, ${res.province});`;
+      return NextResponse.json({
+        message: "Succeeded to publish",
+        result: {
+          content,
+        },
+      });
       return NextResponse.json({ message: "Failed to publish", result: false });
     } else {
       return NextResponse.json({ message: "Failed to publish", result: false });
