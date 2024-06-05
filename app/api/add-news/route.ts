@@ -1,6 +1,7 @@
 import { sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
 import { createHash } from "crypto";
+import { geocoder } from '../../util/geocoder';
 
 export async function POST(request: Request) {
   try {
@@ -20,13 +21,17 @@ export async function POST(request: Request) {
     const pwd = md5.update(secretKey).digest("hex");
     const { rows } = await sql`SELECT * FROM Users WHERE pwd=${pwd}`;
     if (rows.length === 1) {
-      await sql`INSERT INTO news ("ownerId", content, picture, "pictureWidth", "pictureHeight", longitude, latitude) VALUES (${rows[0].id}, ${content}, ${picture}, ${pictureWidth}, ${pictureHeight},${longitude}, ${latitude});`;
-      return NextResponse.json({
-        message: "Succeeded to publish",
-        result: {
-          content,
-        },
-      });
+      const res = await geocoder(longitude, latitude);
+      if (res.status === 0) {
+        await sql`INSERT INTO news ("ownerId", content, picture, "pictureWidth", "pictureHeight", longitude, latitude, "locationNation", "locationProvince") VALUES (${rows[0].id}, ${content}, ${picture}, ${pictureWidth}, ${pictureHeight},${longitude}, ${latitude}, ${res.nation}, ${res.province});`;
+        return NextResponse.json({
+          message: "Succeeded to publish",
+          result: {
+            content,
+          },
+        });
+      }
+      return NextResponse.json({ message: "Failed to publish", result: false });
     } else {
       return NextResponse.json({ message: "Failed to publish", result: false });
     }

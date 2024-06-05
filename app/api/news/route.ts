@@ -24,6 +24,8 @@ export async function GET(request: Request) {
         news."createdTime" AT TIME ZONE 'UTC' AS "createdTime",
         news.longitude,
         news.latitude,
+        news."locationNation",
+        news."locationProvince",
         news."pictureWidth",
         news."pictureHeight"
       FROM news 

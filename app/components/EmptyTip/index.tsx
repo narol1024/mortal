@@ -8,7 +8,7 @@ export const EmptyTip = () => {
   return (
     <div className="flex flex-col w-full justify-center items-center gap-4">
       <TriangleAlertIcon size={50} className="text-default-500" />
-      <p className="text-default-500 text-sm">列表空空如也</p>
+      <p className="text-default-500 text-sm">暂无内容</p>
     </div>
   );
 };

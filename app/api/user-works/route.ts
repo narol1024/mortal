@@ -4,7 +4,6 @@ import { createHash } from "crypto";
 
 export async function GET(request: Request) {
   try {
-    // Extract query parameters for pagination
     const url = new URL(request.url);
     const _pageNum = url.searchParams.get("pageNum");
     const _pageSize = url.searchParams.get("pageSize");
