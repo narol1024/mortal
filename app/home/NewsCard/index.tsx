@@ -22,6 +22,10 @@ interface NewsCardProps extends NewsData {
 }
 
 export const NewsCard = React.memo(function NewsCard(props: NewsCardProps) {
+  const locationDescription =
+    props.locationNation && props.locationProvince
+      ? `${props.locationNation}·${props.locationProvince}`
+      : "未知";
   let aspectRatio = 0;
   try {
     aspectRatio = props.pictureWidth / props.pictureHeight;
@@ -47,7 +51,7 @@ export const NewsCard = React.memo(function NewsCard(props: NewsCardProps) {
         <div className="flex flex-col">
           <p className="text-small">{props.username}</p>
           <p className="text-small text-default-500">
-            {dayjs.utc(props.createdTime).local().format("YYYY/MM/DD HH:mm:ss")}
+            {dayjs.utc(props.createdTime).local().format("YYYY/MM/DD HH:mm:ss")}  {locationDescription}
           </p>
         </div>
       </CardHeader>

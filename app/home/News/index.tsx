@@ -2,7 +2,6 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
-  Button,
   Modal,
   ModalContent,
   ModalHeader,
@@ -74,7 +73,7 @@ export const News = observer(() => {
               </ModalBody>
             )}
             {hasNewsList && (
-              <ModalBody className="block overflow-auto py-4 px-0">
+              <ModalBody className="block overflow-auto py-0 pt-4 px-0">
                 <Virtuoso
                   style={{ height: "460px" }}
                   totalCount={newsList.length}

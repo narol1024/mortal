@@ -104,7 +104,8 @@ export const PictureUploader = observer(() => {
 
 export const Post = observer(() => {
   const [isPublishLoading, setIsPublishLoading] = useState(false);
-  const { user, news, location } = useStores();
+  const { user, news,  } = useStores();
+  const location = user.location;
   const draft = news.draft;
   const messageModal = useModal(Message);
   const userInfo = user.userInfo;

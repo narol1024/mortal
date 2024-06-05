@@ -20,6 +20,8 @@ export interface NewsData {
   createdTime: number;
   longitude: number;
   latitude: number;
+  locationNation: string;
+  locationProvince: string;
   pictureWidth: number;
   pictureHeight: number;
 }

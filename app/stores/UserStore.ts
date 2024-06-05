@@ -6,6 +6,13 @@ export class UserStore {
   userInfo: Partial<UserInfo> = {};
   registerModalVisible = false;
   loginModalVisible = false;
+  location: {
+    longitude: number;
+    latitude: number;
+  } = {
+    longitude: -1,
+    latitude: -1,
+  }
   constructor() {
     makeAutoObservable(this);
     if (global?.window !== undefined) {
@@ -33,5 +40,11 @@ export class UserStore {
   };
   hideLogin = () => {
     this.loginModalVisible = false;
+  };
+  updateLocation = (longitude: number, latitude: number) => {
+    this.location = {
+      longitude,
+      latitude,
+    };
   };
 }

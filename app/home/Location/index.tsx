@@ -6,14 +6,12 @@ import { useStores } from "@/hooks/useStores";
 import { useGeolocation } from "@uidotdev/usehooks";
 
 export const Location = observer(() => {
-  const locationResult = useGeolocation();
-  const { location } = useStores();
-
+  const { longitude, latitude } = useGeolocation();
+  const { user } = useStores();
   useEffect(() => {
-    if (locationResult.longitude && locationResult.latitude) {
-      location.updateLongitude(locationResult.longitude);
-      location.updateAltitude(locationResult.latitude);
+    if (longitude && latitude) {
+      user.updateLocation(longitude, latitude);
     }
-  }, [locationResult]);
+  }, [longitude, latitude]);
   return <></>;
 });

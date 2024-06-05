@@ -7,9 +7,15 @@ import { useStores } from "@/hooks/useStores";
 import { observer } from "mobx-react-lite";
 
 export const Cobe = observer(() => {
-  const { news, location } = useStores();
+  const { news, user } = useStores();
   const newsList = news.newsList;
+  const location = user.location;
   const focusRef = useRef([-1, -1]);
+  const pinLocation = useRef(false);
+  const phi = useRef(0);
+  const theta = useRef(0);
+  const currentPhi = useRef(0);
+  const currentTheta = useRef(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pointerInteracting = useRef<{ x: number; y: number } | null>(null);
   const pointerInteractionMovement = useRef({
@@ -33,11 +39,7 @@ export const Cobe = observer(() => {
     ];
   };
   useEffect(() => {
-    let phi = 0;
-    let theta = 0;
     let width = 0;
-    let currentPhi = 0;
-    let currentTheta = 0;
     if (canvasRef.current) {
       width = canvasRef.current.offsetWidth;
       const onResize = () =>
@@ -48,8 +50,8 @@ export const Cobe = observer(() => {
         devicePixelRatio: 2,
         width: width * 2,
         height: width * 2,
-        phi: 0,
-        theta: 0,
+        phi: phi.current,
+        theta: theta.current,
         dark: 1,
         diffuse: 1,
         mapSamples: 20000,
@@ -60,7 +62,7 @@ export const Cobe = observer(() => {
         markers: newsList.map((newsItem) => {
           return {
             location: [newsItem.latitude, newsItem.longitude],
-            size: 0.1,
+            size: 0.05,
           };
         }),
         onRender: (state) => {
@@ -69,37 +71,43 @@ export const Cobe = observer(() => {
           if (isAutoRotation) {
             // It automatically rotates when there is no user interaction.
             if (!pointerInteracting.current) {
-              phi += 0.005;
+              phi.current += 0.005;
             }
 
-            state.phi = phi + rx.get();
-            state.theta = theta + ry.get();
+            state.phi = phi.current + rx.get();
+            state.theta = theta.current + ry.get();
 
             // 切换到focus模式，保存需要参与计算的变量
-            currentPhi = state.phi;
-            currentTheta = state.theta;
+            currentPhi.current = state.phi;
+            currentTheta.current = state.theta;
           } else {
-            state.phi = currentPhi;
-            state.theta = currentTheta;
+            state.phi = currentPhi.current;
+            state.theta = currentTheta.current;
             const doublePi = Math.PI * 2;
             const [focusPhi, focusTheta] = focusRef.current;
-            const distPositive = (focusPhi - currentPhi + doublePi) % doublePi;
-            const distNegative = (currentPhi - focusPhi + doublePi) % doublePi;
+            const distPositive = (focusPhi - currentPhi.current + doublePi) % doublePi;
+            const distNegative = (currentPhi.current - focusPhi + doublePi) % doublePi;
             // Control the speed
             if (distPositive < distNegative) {
-              currentPhi += distPositive * 0.08;
+              currentPhi.current += distPositive * 0.08;
             } else {
-              currentPhi -= distNegative * 0.08;
+              currentPhi.current -= distNegative * 0.08;
             }
-            currentTheta = currentTheta * 0.92 + focusTheta * 0.08;
+            currentTheta.current = currentTheta.current * 0.92 + focusTheta * 0.08;
 
-            // 切换到动画模式，保存需要参与计算的变量
-            phi = currentPhi;
-            theta = currentTheta;
+            // 切换到旋转模式前，保存需要参与计算的变量
+            phi.current = currentPhi.current;
+            theta.current = currentTheta.current;
             springApi.start({
               rx: 0,
               ry: 0,
             });
+            
+            // 非pin情况下，需要自动切换旋转模式
+            if (pinLocation.current === false && Math.abs(currentPhi.current - focusPhi) <= 0.00001 && Math.abs(currentTheta.current - focusTheta) <= 0.00001) {
+              focusRef.current = [-1, -1];
+              pinLocation.current = false;
+            }
           }
           state.width = width * 2;
           state.height = width * 2;
@@ -110,17 +118,26 @@ export const Cobe = observer(() => {
         window.removeEventListener("resize", onResize);
       };
     }
-    // TODO: 解决渲染抖动问题
-    // }, [newsList]);
-  }, []);
+  }, [newsList]);
+
   useEffect(() => {
     if (news.isPosting) {
       const { longitude, latitude } = location;
       focusRef.current = locationToAngles(longitude, latitude);
+      pinLocation.current = true;
     } else {
       focusRef.current = [-1, -1];
+      pinLocation.current =false;
     }
   }, [news.isPosting]);
+
+  useEffect(() => {
+    const { longitude, latitude } = location;
+    if (longitude !== -1 && latitude !== -1) {
+      focusRef.current = locationToAngles(longitude, latitude);
+      pinLocation.current = false;
+    }
+  }, [location]);
 
   return (
     <div
@@ -172,7 +189,7 @@ export const Cobe = observer(() => {
             });
           }
         }}
-        className="w-full h-full cursor-grab"
+        className="w-full h-full cursor-grab bg-transparent"
       />
     </div>
   );
